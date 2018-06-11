@@ -77,19 +77,19 @@ namespace VoxEvents.API
                     Email = "geraldine@voxcaldera.ort",
                     Phone = "",
                     Part = Parts.Bass,
-                    Availabilities = new List<AvailabilityForMemberDto>()
+                    Availabilities = new List<MemberAvailabilityDto>()
                     {
-                        new AvailabilityForMemberDto()
+                        new MemberAvailabilityDto()
                         {
                             EventId = 1,
                             Available = false
                         },
-                        new AvailabilityForMemberDto()
+                        new MemberAvailabilityDto()
                         {
                             EventId = 2,
                             Available = true
                         },
-                        new AvailabilityForMemberDto()
+                        new MemberAvailabilityDto()
                         {
                             EventId = 3,
                             Available = true
@@ -104,14 +104,14 @@ namespace VoxEvents.API
                     Email = "julie@voxcaldera.org",
                     Phone = "0455123456",
                     Part = Parts.Soprano,
-                    Availabilities = new List<AvailabilityForMemberDto>()
+                    Availabilities = new List<MemberAvailabilityDto>()
                     {
-                        new AvailabilityForMemberDto()
+                        new MemberAvailabilityDto()
                         {
                             EventId = 1,
                             Available = true
                         },
-                        new AvailabilityForMemberDto()
+                        new MemberAvailabilityDto()
                         {
                             EventId = 3,
                             Available = true
@@ -126,14 +126,14 @@ namespace VoxEvents.API
                     Email = "natalie@voxcaldera.org",
                     Phone = "",
                     Part = Parts.Alto,
-                    Availabilities = new List<AvailabilityForMemberDto>()
+                    Availabilities = new List<MemberAvailabilityDto>()
                     {
-                        new AvailabilityForMemberDto()
+                        new MemberAvailabilityDto()
                         {
                             EventId = 1,
                             Available = true
                         },
-                        new AvailabilityForMemberDto()
+                        new MemberAvailabilityDto()
                         {
                             EventId = 2,
                             Available = false
@@ -148,19 +148,19 @@ namespace VoxEvents.API
                     Email = "george@voxcaldera.org",
                     Phone = "0455987665",
                     Part = Parts.Bass,
-                    Availabilities = new List<AvailabilityForMemberDto>()
+                    Availabilities = new List<MemberAvailabilityDto>()
                     {
-                        new AvailabilityForMemberDto()
+                        new MemberAvailabilityDto()
                         {
                             EventId = 1,
                             Available = true
                         },
-                        new AvailabilityForMemberDto()
+                        new MemberAvailabilityDto()
                         {
                             EventId = 2,
                             Available = true
                         },
-                        new AvailabilityForMemberDto()
+                        new MemberAvailabilityDto()
                         {
                             EventId = 3,
                             Available = true
@@ -175,9 +175,9 @@ namespace VoxEvents.API
                     Email = "brad@voxcaldera.org",
                     Phone = "0455582452",
                     Part = Parts.Tenor,
-                    Availabilities = new List<AvailabilityForMemberDto>()
+                    Availabilities = new List<MemberAvailabilityDto>()
                     {
-                        new AvailabilityForMemberDto()
+                        new MemberAvailabilityDto()
                         {
                             EventId = 1,
                             Available = true
@@ -192,7 +192,7 @@ namespace VoxEvents.API
                     Email = "kim@voxcaldera.org",
                     Phone = "0455195548",
                     Part = Parts.Alto,
-                    Availabilities = new List<AvailabilityForMemberDto>()
+                    Availabilities = new List<MemberAvailabilityDto>()
                     {
 
                     }

@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace VoxEvents.API.Models
 {
-    public class AvailabilityForMemberDto
+    public class AvailabilityDto
     {
         public int EventId { get; set; }
+        public int MemberId { get; set; }
         public bool Available { get; set; }
     }
 }

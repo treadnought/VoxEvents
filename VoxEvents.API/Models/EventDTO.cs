@@ -21,7 +21,7 @@ namespace VoxEvents.API.Models
             }
         }
 
-        public ICollection<AvailabilityForMemberDto> Availabilities { get; set; }
-            = new List<AvailabilityForMemberDto>();
+        public ICollection<MemberAvailabilityDto> Availabilities { get; set; }
+            = new List<MemberAvailabilityDto>();
     }
 }
