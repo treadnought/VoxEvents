@@ -11,14 +11,34 @@ namespace VoxEvents.API
     {
         public static EventsDataStore Current { get; } = new EventsDataStore();
 
-        public List<EventDTO> Events { get; set; }
-        public List<MemberDTO> Members { get; set; }
+        public List<EventDto> Events { get; set; }
+        public List<MemberDto> Members { get; set; }
+        public List<VenueDto> Venues { get; set; }
 
         public EventsDataStore()
         {
-            Events = new List<EventDTO>()
+            Venues = new List<VenueDto>()
             {
-                new EventDTO()
+                new VenueDto()
+                {
+                    Id = 1,
+                    VenueName = "St Martins Mullumbimby"
+                },
+                new VenueDto()
+                {
+                    Id = 2,
+                    VenueName = "Byron Theatre"
+                },
+                new VenueDto()
+                {
+                    Id = 3,
+                    VenueName = "Mullumbimby Civic Centre"
+                }
+            };
+
+            Events = new List<EventDto>()
+            {
+                new EventDto()
                 {
                     Id = 1,
                     EventName = "Into the Light",
@@ -27,7 +47,7 @@ namespace VoxEvents.API
                     RehearsalTime = new DateTime(2018, 6, 23, 13, 0, 0),
                     PerformanceTime = new DateTime(2018, 6, 23, 15, 0, 0)
                 },
-                new EventDTO()
+                new EventDto()
                 {
                     Id  = 2,
                     EventName = "Into the Light",
@@ -36,7 +56,7 @@ namespace VoxEvents.API
                     RehearsalTime = new DateTime(2018, 6, 24, 14, 0, 0),
                     PerformanceTime = new DateTime(2018, 6, 24, 16, 0, 0)
                 },
-                new EventDTO()
+                new EventDto()
                 {
                     Id = 3,
                     EventName = "The Events",
@@ -47,62 +67,136 @@ namespace VoxEvents.API
                 }
             };
 
-            Members = new List<MemberDTO>()
+            Members = new List<MemberDto>()
             {
-                new MemberDTO()
+                new MemberDto()
                 {
                     Id = 1,
-                    FirstName = "Ian",
-                    LastName = "Bowles",
-                    Email = "ianabowles@yahoo.com.au",
+                    FirstName = "Geraldine",
+                    LastName = "Doogue",
+                    Email = "geraldine@voxcaldera.ort",
                     Phone = "",
-                    Part = Parts.Bass
+                    Part = Parts.Bass,
+                    Availabilities = new List<AvailabilityForMemberDto>()
+                    {
+                        new AvailabilityForMemberDto()
+                        {
+                            EventId = 1,
+                            Available = false
+                        },
+                        new AvailabilityForMemberDto()
+                        {
+                            EventId = 2,
+                            Available = true
+                        },
+                        new AvailabilityForMemberDto()
+                        {
+                            EventId = 3,
+                            Available = true
+                        }
+                    }
                 },
-                new MemberDTO()
+                new MemberDto()
                 {
                     Id = 2,
-                    FirstName = "Sandy",
-                    LastName = "Cochrane",
-                    Email = "sandy.cochrane@hotmail.com",
-                    Phone = "0427495076",
-                    Part = Parts.Soprano
+                    FirstName = "Julie",
+                    LastName = "Andrews",
+                    Email = "julie@voxcaldera.org",
+                    Phone = "0455123456",
+                    Part = Parts.Soprano,
+                    Availabilities = new List<AvailabilityForMemberDto>()
+                    {
+                        new AvailabilityForMemberDto()
+                        {
+                            EventId = 1,
+                            Available = true
+                        },
+                        new AvailabilityForMemberDto()
+                        {
+                            EventId = 3,
+                            Available = true
+                        }
+                    }
                 },
-                new MemberDTO()
+                new MemberDto()
                 {
                     Id = 3,
-                    FirstName = "Heather",
-                    LastName = "Ellemor-Collins",
-                    Email = "hellemorcollins@gmail.com",
+                    FirstName = "Natalie",
+                    LastName = "Wood",
+                    Email = "natalie@voxcaldera.org",
                     Phone = "",
-                    Part = Parts.Alto
+                    Part = Parts.Alto,
+                    Availabilities = new List<AvailabilityForMemberDto>()
+                    {
+                        new AvailabilityForMemberDto()
+                        {
+                            EventId = 1,
+                            Available = true
+                        },
+                        new AvailabilityForMemberDto()
+                        {
+                            EventId = 2,
+                            Available = false
+                        }
+                    }
                 },
-                new MemberDTO()
+                new MemberDto()
                 {
                     Id = 4,
-                    FirstName = "David",
-                    LastName = "Ellemor-Collins",
-                    Email = "davidec.email@gmail.com",
-                    Phone = "0457670122",
-                    Part = Parts.Bass
+                    FirstName = "George",
+                    LastName = "Clooney",
+                    Email = "george@voxcaldera.org",
+                    Phone = "0455987665",
+                    Part = Parts.Bass,
+                    Availabilities = new List<AvailabilityForMemberDto>()
+                    {
+                        new AvailabilityForMemberDto()
+                        {
+                            EventId = 1,
+                            Available = true
+                        },
+                        new AvailabilityForMemberDto()
+                        {
+                            EventId = 2,
+                            Available = true
+                        },
+                        new AvailabilityForMemberDto()
+                        {
+                            EventId = 3,
+                            Available = true
+                        }
+                    }
                 },
-                new MemberDTO()
+                new MemberDto()
                 {
                     Id = 5,
-                    FirstName = "Chris",
-                    LastName = "Harris",
-                    Email = "harr59@hotmail.com",
-                    Phone = "0457365015",
-                    Part = Parts.Tenor
+                    FirstName = "Brad",
+                    LastName = "Pitt",
+                    Email = "brad@voxcaldera.org",
+                    Phone = "0455582452",
+                    Part = Parts.Tenor,
+                    Availabilities = new List<AvailabilityForMemberDto>()
+                    {
+                        new AvailabilityForMemberDto()
+                        {
+                            EventId = 1,
+                            Available = true
+                        }
+                    }
                 },
-                new MemberDTO()
+                new MemberDto()
                 {
                     Id = 6,
-                    FirstName = "Laura",
-                    LastName = "Hymers",
-                    Email = "lauramhy@gmail.com",
-                    Phone = "0457365015",
-                    Part = Parts.Alto
-                },
+                    FirstName = "Kim",
+                    LastName = "Novak",
+                    Email = "kim@voxcaldera.org",
+                    Phone = "0455195548",
+                    Part = Parts.Alto,
+                    Availabilities = new List<AvailabilityForMemberDto>()
+                    {
+
+                    }
+                }
             };
         }
     }

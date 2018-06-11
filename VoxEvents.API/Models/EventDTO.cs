@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VoxEvents.API.Models
 {
-    public class EventDTO
+    public class EventDto
     {
         public int Id { get; set; }
         public string EventName { get; set; }
@@ -14,5 +14,14 @@ namespace VoxEvents.API.Models
         public DateTime EventDate { get; set; }
         public DateTime RehearsalTime { get; set; }
         public DateTime PerformanceTime { get; set; }
+
+        public int NumberOfAvailabilites { get
+            {
+                return Availabilities.Count();
+            }
+        }
+
+        public ICollection<AvailabilityForMemberDto> Availabilities { get; set; }
+            = new List<AvailabilityForMemberDto>();
     }
 }

@@ -14,7 +14,7 @@ namespace VoxEvents.API.Models
         Bass
     }
 
-    public class MemberDTO
+    public class MemberDto
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -22,5 +22,14 @@ namespace VoxEvents.API.Models
         public string Email { get; set; }
         public string Phone { get; set; }
         public Parts Part { get; set; }
+
+        public int NumberOfAvailabilities { get
+            {
+                return Availabilities.Count();
+            }
+        }
+
+        public ICollection<AvailabilityForMemberDto> Availabilities { get; set; }
+            = new List<AvailabilityForMemberDto>();
     }
 }
