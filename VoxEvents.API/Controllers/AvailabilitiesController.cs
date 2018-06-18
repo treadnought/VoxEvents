@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,6 +78,7 @@ namespace VoxEvents.API.Controllers
 
             var finalMemberAvailability = new MemberAvailabilityDto()
             {
+                MemberId = member.Id,
                 EventId = availability.EventId,
                 Available = availability.Available
             };
@@ -86,6 +88,46 @@ namespace VoxEvents.API.Controllers
             return CreatedAtRoute("GetAvailability", new
                 { memberId, eventId = availability.EventId }, 
                 finalMemberAvailability);
+        }
+
+        [HttpPatch("members/{memberId}/availabilities/{eventId}")]
+        public IActionResult UpdateMemberAvailability(int memberId, int eventId, 
+            [FromBody] JsonPatchDocument<MemberAvailabilityUpdateDto> patchDocument)
+        {
+            if (patchDocument == null)
+            {
+                return BadRequest();
+            }
+
+            var member = EventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
+            if (member == null)
+            {
+                return NotFound();
+            }
+
+            var availabilityFromStore = member.Availabilities.FirstOrDefault(a => a.EventId == eventId);
+            if (availabilityFromStore == null)
+            {
+                return NotFound();
+            }
+
+            var availabilityToPatch = new MemberAvailabilityUpdateDto()
+            {
+                Available = availabilityFromStore.Available
+            };
+
+            patchDocument.ApplyTo(availabilityToPatch, ModelState);
+
+            TryValidateModel(availabilityToPatch);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            availabilityFromStore.Available = availabilityToPatch.Available;
+
+            return NoContent();
         }
 
         //[HttpGet("events/{eventId}/availabilities/{memberId}")]

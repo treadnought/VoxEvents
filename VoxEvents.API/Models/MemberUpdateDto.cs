@@ -1,8 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace VoxEvents.API.Models
 {
-    public class MemberCreateDto
+    public class MemberUpdateDto
     {
         [Required(ErrorMessage = "First name is required")]
         [MaxLength(50), MinLength(2)]

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace VoxEvents.API.Controllers
 
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             var maxMemberId = EventsDataStore.Current.Members.Max(m => m.Id);
@@ -59,6 +60,92 @@ namespace VoxEvents.API.Controllers
 
             return CreatedAtRoute("GetMember", new
             { id = memberToAdd.Id }, memberToAdd);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateMember(int id, [FromBody] MemberUpdateDto member)
+        {
+            if (member == null)
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var memberFromStore = EventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
+
+            if (memberFromStore == null)
+            {
+                return NotFound();
+            }
+
+            memberFromStore.FirstName = member.FirstName;
+            memberFromStore.LastName = member.LastName;
+            memberFromStore.Email = member.Email;
+            memberFromStore.Phone = member.Phone;
+            memberFromStore.Part = member.Part;
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PatchMember(int id, [FromBody] JsonPatchDocument<MemberUpdateDto> patchDocument)
+        {
+            if (patchDocument == null)
+            {
+                return BadRequest();
+            }
+
+            var memberFromStore = EventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
+
+            if (memberFromStore == null)
+            {
+                return NotFound();
+            }
+
+            var memberToPatch = new MemberUpdateDto()
+            {
+                FirstName = memberFromStore.FirstName,
+                LastName = memberFromStore.LastName,
+                Email = memberFromStore.Email,
+                Phone = memberFromStore.Phone,
+                Part = memberFromStore.Part
+            };
+
+            patchDocument.ApplyTo(memberToPatch, ModelState);
+
+            TryValidateModel(memberToPatch);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            memberFromStore.FirstName = memberToPatch.FirstName;
+            memberFromStore.LastName = memberToPatch.LastName;
+            memberFromStore.Email = memberToPatch.Email;
+            memberFromStore.Phone = memberToPatch.Phone;
+            memberFromStore.Part = memberToPatch.Part;
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteMember(int id)
+        {
+            var memberFromStore = EventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
+
+            if (memberFromStore == null)
+            {
+                return NotFound();
+            }
+
+            EventsDataStore.Current.Members.Remove(memberFromStore);
+
+            return NoContent();
         }
     }
 }
