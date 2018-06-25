@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace VoxEvents.API.Controllers
 {
     [Route("api/events")]
-    public class EventsController : Controller
+    public class ChoirEventsController : Controller
     {
         [HttpGet]
         public IActionResult GetEvents()

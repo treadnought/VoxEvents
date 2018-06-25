@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VoxEvents.API.Models
 {
-    public class EventDto
+    public class ChoirEventDto
     {
         public int Id { get; set; }
         public string EventName { get; set; }

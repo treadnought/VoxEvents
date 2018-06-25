@@ -11,7 +11,7 @@ namespace VoxEvents.API
     {
         public static EventsDataStore Current { get; } = new EventsDataStore();
 
-        public List<EventDto> Events { get; set; }
+        public List<ChoirEventDto> Events { get; set; }
         public List<MemberDto> Members { get; set; }
         public List<VenueDto> Venues { get; set; }
 
@@ -36,9 +36,9 @@ namespace VoxEvents.API
                 }
             };
 
-            Events = new List<EventDto>()
+            Events = new List<ChoirEventDto>()
             {
-                new EventDto()
+                new ChoirEventDto()
                 {
                     Id = 1,
                     EventName = "Into the Light",
@@ -47,7 +47,7 @@ namespace VoxEvents.API
                     RehearsalTime = new DateTime(2018, 6, 23, 13, 0, 0),
                     PerformanceTime = new DateTime(2018, 6, 23, 15, 0, 0)
                 },
-                new EventDto()
+                new ChoirEventDto()
                 {
                     Id  = 2,
                     EventName = "Into the Light",
@@ -56,7 +56,7 @@ namespace VoxEvents.API
                     RehearsalTime = new DateTime(2018, 6, 24, 14, 0, 0),
                     PerformanceTime = new DateTime(2018, 6, 24, 16, 0, 0)
                 },
-                new EventDto()
+                new ChoirEventDto()
                 {
                     Id = 3,
                     EventName = "The Events",

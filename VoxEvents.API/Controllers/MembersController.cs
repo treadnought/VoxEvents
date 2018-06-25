@@ -1,17 +1,28 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VoxEvents.API.Models;
+using VoxEvents.API.Services;
 
 namespace VoxEvents.API.Controllers
 {
     [Route("api/members")]
     public class MembersController : Controller
     {
+        private readonly ILogger<MembersController> _logger;
+        private readonly IMailService _mailService;
+
+        public MembersController(ILogger<MembersController> logger, IMailService mailService)
+        {
+            _logger = logger;
+            _mailService = mailService;
+        }
+
         [HttpGet]
         public IActionResult GetMembers()
         {
@@ -144,6 +155,8 @@ namespace VoxEvents.API.Controllers
             }
 
             EventsDataStore.Current.Members.Remove(memberFromStore);
+
+            _mailService.Send("Member Deleted", $"Member {memberFromStore.FirstName} {memberFromStore.LastName} with id {id} deleted.");
 
             return NoContent();
         }

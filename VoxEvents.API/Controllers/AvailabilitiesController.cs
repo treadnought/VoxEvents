@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,13 @@ namespace VoxEvents.API.Controllers
     [Route("api")]
     public class AvailabilitiesController : Controller
     {
+        private ILogger<AvailabilitiesController> _logger;
+
+        public AvailabilitiesController(ILogger<AvailabilitiesController> logger)
+        {
+            _logger = logger;
+        }
+
         [HttpGet("events/{eventId}/availabilities")]
         public IActionResult GetEventAllAvailabilities(int eventId)
         {
@@ -19,6 +27,7 @@ namespace VoxEvents.API.Controllers
 
             if (eventToCheck == null)
             {
+                _logger.LogInformation($"Event with id {eventId} not found when getting all availabilities");
                 return NotFound();
             }
 
@@ -32,6 +41,7 @@ namespace VoxEvents.API.Controllers
 
             if (member == null)
             {
+                _logger.LogInformation($"Member with id {memberId} not found when getting member availabilities");
                 return NotFound();
             }
 
@@ -41,19 +51,30 @@ namespace VoxEvents.API.Controllers
         [HttpGet("members/{memberId}/availabilities/{eventId}", Name = "GetAvailability")]
         public IActionResult GetMemberAvailability(int memberId, int eventId)
         {
-            var member = EventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
-            if (member == null)
+            try
             {
-                return NotFound();
-            }
+                //throw new Exception("A well-bred exception");
 
-            var availability = member.Availabilities.FirstOrDefault(e => e.EventId == eventId);
-            if (availability == null)
+                var member = EventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
+                if (member == null)
+                {
+                    _logger.LogInformation($"Member with id {memberId} not found");
+                    return NotFound();
+                }
+
+                var availability = member.Availabilities.FirstOrDefault(e => e.EventId == eventId);
+                if (availability == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(availability);
+            }
+            catch(Exception ex)
             {
-                return NotFound();
+                _logger.LogCritical($"Exception getting member id {memberId}'s availability for event id {eventId}", ex);
+                return StatusCode(500, "A white person's problem occurred handling your request");
             }
-
-            return Ok(availability);
         }
 
         [HttpPost("members/{memberId}/availabilities")]
