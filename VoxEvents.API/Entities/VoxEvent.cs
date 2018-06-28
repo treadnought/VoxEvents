@@ -15,10 +15,6 @@ namespace VoxEvents.API.Entities
         [MaxLength(50), MinLength(2)]
         public string EventName { get; set; }
 
-        [Required(ErrorMessage = "Venue name is required")]
-        [MaxLength(50), MinLength(2)]
-        public string EventVenue { get; set; }
-
         [DataType(DataType.DateTime)]
         public DateTime EventDate { get; set; }
 
@@ -30,5 +26,7 @@ namespace VoxEvents.API.Entities
 
         public ICollection<Availability> Availabilities { get; set; } 
             = new List<Availability>();
+        public int VenueId { get; set; }
+        public Venue Venue { get; set; }
     }
 }

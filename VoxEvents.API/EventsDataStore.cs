@@ -42,7 +42,7 @@ namespace VoxEvents.API
                 {
                     Id = 1,
                     EventName = "Into the Light",
-                    EventVenue = "St Marys Ballina",
+                    VenueId = 1,
                     EventDate = new DateTime(2018, 6, 23),
                     RehearsalTime = new DateTime(2018, 6, 23, 13, 0, 0),
                     PerformanceTime = new DateTime(2018, 6, 23, 15, 0, 0)
@@ -51,7 +51,7 @@ namespace VoxEvents.API
                 {
                     Id  = 2,
                     EventName = "Into the Light",
-                    EventVenue = "St Carthages Lismore",
+                    VenueId = 2,
                     EventDate = new DateTime(2018, 6, 24),
                     RehearsalTime = new DateTime(2018, 6, 24, 14, 0, 0),
                     PerformanceTime = new DateTime(2018, 6, 24, 16, 0, 0)
@@ -60,7 +60,7 @@ namespace VoxEvents.API
                 {
                     Id = 3,
                     EventName = "The Events",
-                    EventVenue = "Lismore City Hall",
+                    VenueId = 3,
                     EventDate = new DateTime(2018,7,20),
                     RehearsalTime = new DateTime(2018,7,20,13,0,0),
                     PerformanceTime = new DateTime(2018,7,20,18,0,0)

@@ -10,7 +10,6 @@ namespace VoxEvents.API.Models
     {
         public int Id { get; set; }
         public string EventName { get; set; }
-        public string EventVenue { get; set; }
         public DateTime EventDate { get; set; }
         public DateTime RehearsalTime { get; set; }
         public DateTime PerformanceTime { get; set; }
@@ -23,5 +22,7 @@ namespace VoxEvents.API.Models
 
         public ICollection<MemberAvailabilityDto> Availabilities { get; set; }
             = new List<MemberAvailabilityDto>();
+        public int VenueId { get; set; }
+        public VenueDto Venue { get; set; }
     }
 }
