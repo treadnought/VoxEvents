@@ -12,11 +12,19 @@ namespace VoxEvents.API.Entities
         public VoxEventsContext(DbContextOptions<VoxEventsContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
+            Database.Migrate();
         }
 
         public DbSet<VoxEvent> VoxEvents { get; set; }
         public DbSet<Member> Members { get; set; }
         public DbSet<Availability> Availabilities { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Availability>()
+                .HasKey(a => new { a.MemberId, a.VoxEventId });
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
