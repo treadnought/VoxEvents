@@ -62,7 +62,7 @@ namespace VoxEvents.API.Controllers
                     return NotFound();
                 }
 
-                var availability = member.Availabilities.FirstOrDefault(e => e.EventId == eventId);
+                var availability = member.Availabilities.FirstOrDefault(e => e.VoxEventId == eventId);
                 if (availability == null)
                 {
                     return NotFound();
@@ -100,14 +100,14 @@ namespace VoxEvents.API.Controllers
             var finalMemberAvailability = new MemberAvailabilityDto()
             {
                 MemberId = member.Id,
-                EventId = availability.EventId,
+                VoxEventId = availability.VoxEventId,
                 Available = availability.Available
             };
 
             member.Availabilities.Add(finalMemberAvailability);
 
             return CreatedAtRoute("GetAvailability", new
-                { memberId, eventId = availability.EventId }, 
+                { memberId, eventId = availability.VoxEventId }, 
                 finalMemberAvailability);
         }
 
@@ -126,7 +126,7 @@ namespace VoxEvents.API.Controllers
                 return NotFound();
             }
 
-            var availabilityFromStore = member.Availabilities.FirstOrDefault(a => a.EventId == eventId);
+            var availabilityFromStore = member.Availabilities.FirstOrDefault(a => a.VoxEventId == eventId);
             if (availabilityFromStore == null)
             {
                 return NotFound();

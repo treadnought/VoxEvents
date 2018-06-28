@@ -11,7 +11,7 @@ namespace VoxEvents.API
     {
         public static EventsDataStore Current { get; } = new EventsDataStore();
 
-        public List<ChoirEventDto> Events { get; set; }
+        public List<VoxEventDto> Events { get; set; }
         public List<MemberDto> Members { get; set; }
         public List<VenueDto> Venues { get; set; }
 
@@ -36,9 +36,9 @@ namespace VoxEvents.API
                 }
             };
 
-            Events = new List<ChoirEventDto>()
+            Events = new List<VoxEventDto>()
             {
-                new ChoirEventDto()
+                new VoxEventDto()
                 {
                     Id = 1,
                     EventName = "Into the Light",
@@ -47,7 +47,7 @@ namespace VoxEvents.API
                     RehearsalTime = new DateTime(2018, 6, 23, 13, 0, 0),
                     PerformanceTime = new DateTime(2018, 6, 23, 15, 0, 0)
                 },
-                new ChoirEventDto()
+                new VoxEventDto()
                 {
                     Id  = 2,
                     EventName = "Into the Light",
@@ -56,7 +56,7 @@ namespace VoxEvents.API
                     RehearsalTime = new DateTime(2018, 6, 24, 14, 0, 0),
                     PerformanceTime = new DateTime(2018, 6, 24, 16, 0, 0)
                 },
-                new ChoirEventDto()
+                new VoxEventDto()
                 {
                     Id = 3,
                     EventName = "The Events",
@@ -81,17 +81,17 @@ namespace VoxEvents.API
                     {
                         new MemberAvailabilityDto()
                         {
-                            EventId = 1,
+                            VoxEventId = 1,
                             Available = false
                         },
                         new MemberAvailabilityDto()
                         {
-                            EventId = 2,
+                            VoxEventId = 2,
                             Available = true
                         },
                         new MemberAvailabilityDto()
                         {
-                            EventId = 3,
+                            VoxEventId = 3,
                             Available = true
                         }
                     }
@@ -108,12 +108,12 @@ namespace VoxEvents.API
                     {
                         new MemberAvailabilityDto()
                         {
-                            EventId = 1,
+                            VoxEventId = 1,
                             Available = true
                         },
                         new MemberAvailabilityDto()
                         {
-                            EventId = 3,
+                            VoxEventId = 3,
                             Available = true
                         }
                     }
@@ -130,12 +130,12 @@ namespace VoxEvents.API
                     {
                         new MemberAvailabilityDto()
                         {
-                            EventId = 1,
+                            VoxEventId = 1,
                             Available = true
                         },
                         new MemberAvailabilityDto()
                         {
-                            EventId = 2,
+                            VoxEventId = 2,
                             Available = false
                         }
                     }
@@ -152,17 +152,17 @@ namespace VoxEvents.API
                     {
                         new MemberAvailabilityDto()
                         {
-                            EventId = 1,
+                            VoxEventId = 1,
                             Available = true
                         },
                         new MemberAvailabilityDto()
                         {
-                            EventId = 2,
+                            VoxEventId = 2,
                             Available = true
                         },
                         new MemberAvailabilityDto()
                         {
-                            EventId = 3,
+                            VoxEventId = 3,
                             Available = true
                         }
                     }
@@ -179,7 +179,7 @@ namespace VoxEvents.API
                     {
                         new MemberAvailabilityDto()
                         {
-                            EventId = 1,
+                            VoxEventId = 1,
                             Available = true
                         }
                     }

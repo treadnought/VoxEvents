@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VoxEvents.API.Models;
 
 namespace VoxEvents.API.Controllers
 {
     [Route("api/events")]
-    public class ChoirEventsController : Controller
+    public class VoxEventsController : Controller
     {
         [HttpGet]
         public IActionResult GetEvents()
@@ -26,5 +27,21 @@ namespace VoxEvents.API.Controllers
             }
             return Ok(eventToReturn);
         }
+
+        //[HttpPost]
+        //public IActionResult CreateEvent([FromBody] VoxEventCreateDto choirEvent)
+        //{
+        //    if (choirEvent == null)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+
+        //}
     }
 }

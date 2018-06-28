@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VoxEvents.API.Models
 {
-    public class ChoirEventUpdateDto
+    public class VoxEventUpdateDto
     {
         [Required(ErrorMessage = "Event name is required")]
         [MaxLength(50), MinLength(2)]

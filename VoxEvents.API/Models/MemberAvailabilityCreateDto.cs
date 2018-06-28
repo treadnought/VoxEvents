@@ -12,7 +12,7 @@ namespace VoxEvents.API.Models
         [Required]
         public int MemberId { get; set; }
         [Required]
-        public int EventId { get; set; }
+        public int VoxEventId { get; set; }
         [Required]
         public bool Available { get; set; }
     }

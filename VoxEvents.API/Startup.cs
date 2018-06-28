@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
+using VoxEvents.API.Entities;
 using VoxEvents.API.Services;
 
 namespace VoxEvents.API
@@ -30,6 +32,9 @@ namespace VoxEvents.API
             services.AddMvc()
                 .AddMvcOptions(o => o.OutputFormatters.Add(
                     new XmlDataContractSerializerOutputFormatter()));
+
+            var connectionString = @"Server=(localdb)\MSSQLLocalDB;Database=VoxEventsDB;Trusted_Connection=True";
+            services.AddDbContext<VoxEventsContext>(o => o.UseSqlServer(connectionString));
 
 #if DEBUG
             services.AddTransient<IMailService, LocalMailService>();

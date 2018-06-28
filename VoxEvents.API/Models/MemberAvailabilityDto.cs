@@ -9,7 +9,7 @@ namespace VoxEvents.API.Models
     public class MemberAvailabilityDto
     {
         public int MemberId { get; set; }
-        public int EventId { get; set; }
+        public int VoxEventId { get; set; }
         public bool Available { get; set; }
     }
 }
