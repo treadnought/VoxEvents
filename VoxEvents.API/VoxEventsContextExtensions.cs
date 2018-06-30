@@ -3,62 +3,58 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VoxEvents.API.Models;
+using VoxEvents.API.Entities;
 
 namespace VoxEvents.API
 {
-    public class EventsDataStore
+    public static class VoxEventsContextExtensions
     {
-        public static EventsDataStore Current { get; } = new EventsDataStore();
-
-        public List<VoxEventDto> Events { get; set; }
-        public List<MemberDto> Members { get; set; }
-        public List<VenueDto> Venues { get; set; }
-
-        public EventsDataStore()
+        public static void EnsureSeedDataForContext(this VoxEventsContext context)
         {
-            Venues = new List<VenueDto>()
+            if (context.Members.Any())
             {
-                new VenueDto()
+                return;
+            }
+
+            var venues = new List<Venue>()
+            {
+                new Venue()
                 {
-                    Id = 1,
-                    VenueName = "St Martins Mullumbimby"
+                    VenueName = "St Martins Mullumbimby",
+                    HasPiano = false
                 },
-                new VenueDto()
+                new Venue()
                 {
-                    Id = 2,
-                    VenueName = "Byron Theatre"
+                    VenueName = "Byron Theatre",
+                    HasPiano = true
                 },
-                new VenueDto()
+                new Venue()
                 {
-                    Id = 3,
-                    VenueName = "Mullumbimby Civic Centre"
+                    VenueName = "Mullumbimby Civic Centre",
+                    HasPiano = false
                 }
             };
 
-            Events = new List<VoxEventDto>()
+            var voxEvents = new List<VoxEvent>()
             {
-                new VoxEventDto()
+                new VoxEvent()
                 {
-                    Id = 1,
                     EventName = "Into the Light",
                     VenueId = 1,
                     EventDate = new DateTime(2018, 6, 23),
                     RehearsalTime = new DateTime(2018, 6, 23, 13, 0, 0),
                     PerformanceTime = new DateTime(2018, 6, 23, 15, 0, 0)
                 },
-                new VoxEventDto()
+                new VoxEvent()
                 {
-                    Id  = 2,
                     EventName = "Into the Light",
                     VenueId = 2,
                     EventDate = new DateTime(2018, 6, 24),
                     RehearsalTime = new DateTime(2018, 6, 24, 14, 0, 0),
                     PerformanceTime = new DateTime(2018, 6, 24, 16, 0, 0)
                 },
-                new VoxEventDto()
+                new VoxEvent()
                 {
-                    Id = 3,
                     EventName = "The Events",
                     VenueId = 3,
                     EventDate = new DateTime(2018,7,20),
@@ -67,137 +63,136 @@ namespace VoxEvents.API
                 }
             };
 
-            Members = new List<MemberDto>()
+            var members = new List<Member>()
             {
-                new MemberDto()
+                new Member()
                 {
-                    Id = 1,
                     FirstName = "Geraldine",
                     LastName = "Doogue",
                     Email = "geraldine@voxcaldera.ort",
                     Phone = "",
-                    Part = Parts.Bass,
-                    Availabilities = new List<MemberAvailabilityDto>()
+                    Part = "Bass",
+                    Availabilities = new List<Availability>()
                     {
-                        new MemberAvailabilityDto()
+                        new Availability()
                         {
                             VoxEventId = 1,
                             Available = false
                         },
-                        new MemberAvailabilityDto()
+                        new Availability()
                         {
                             VoxEventId = 2,
                             Available = true
                         },
-                        new MemberAvailabilityDto()
+                        new Availability()
                         {
                             VoxEventId = 3,
                             Available = true
                         }
                     }
                 },
-                new MemberDto()
+                new Member()
                 {
-                    Id = 2,
                     FirstName = "Julie",
                     LastName = "Andrews",
                     Email = "julie@voxcaldera.org",
                     Phone = "0455123456",
-                    Part = Parts.Soprano,
-                    Availabilities = new List<MemberAvailabilityDto>()
+                    Part = "Soprano",
+                    Availabilities = new List<Availability>()
                     {
-                        new MemberAvailabilityDto()
+                        new Availability()
                         {
                             VoxEventId = 1,
                             Available = true
                         },
-                        new MemberAvailabilityDto()
+                        new Availability()
                         {
                             VoxEventId = 3,
                             Available = true
                         }
                     }
                 },
-                new MemberDto()
+                new Member()
                 {
-                    Id = 3,
                     FirstName = "Natalie",
                     LastName = "Wood",
                     Email = "natalie@voxcaldera.org",
                     Phone = "",
-                    Part = Parts.Alto,
-                    Availabilities = new List<MemberAvailabilityDto>()
+                    Part = "Alto",
+                    Availabilities = new List<Availability>()
                     {
-                        new MemberAvailabilityDto()
+                        new Availability()
                         {
                             VoxEventId = 1,
                             Available = true
                         },
-                        new MemberAvailabilityDto()
+                        new Availability()
                         {
                             VoxEventId = 2,
                             Available = false
                         }
                     }
                 },
-                new MemberDto()
+                new Member()
                 {
-                    Id = 4,
                     FirstName = "George",
                     LastName = "Clooney",
                     Email = "george@voxcaldera.org",
                     Phone = "0455987665",
-                    Part = Parts.Bass,
-                    Availabilities = new List<MemberAvailabilityDto>()
+                    Part = "Bass",
+                    Availabilities = new List<Availability>()
                     {
-                        new MemberAvailabilityDto()
+                        new Availability()
                         {
                             VoxEventId = 1,
                             Available = true
                         },
-                        new MemberAvailabilityDto()
+                        new Availability()
                         {
                             VoxEventId = 2,
                             Available = true
                         },
-                        new MemberAvailabilityDto()
+                        new Availability()
                         {
                             VoxEventId = 3,
                             Available = true
                         }
                     }
                 },
-                new MemberDto()
+                new Member()
                 {
-                    Id = 5,
                     FirstName = "Brad",
                     LastName = "Pitt",
                     Email = "brad@voxcaldera.org",
                     Phone = "0455582452",
-                    Part = Parts.Tenor,
-                    Availabilities = new List<MemberAvailabilityDto>()
+                    Part = "Tenor",
+                    Availabilities = new List<Availability>()
                     {
-                        new MemberAvailabilityDto()
+                        new Availability()
                         {
                             VoxEventId = 1,
                             Available = true
                         }
                     }
                 },
-                new MemberDto()
+                new Member()
                 {
-                    Id = 6,
                     FirstName = "Kim",
                     LastName = "Novak",
                     Email = "kim@voxcaldera.org",
                     Phone = "0455195548",
-                    Part = Parts.Alto,
-                    Availabilities = new List<MemberAvailabilityDto>()
+                    Part = "Alto",
+                    Availabilities = new List<Availability>()
                     {
 
                     }
                 }
             };
+
+            context.Venues.AddRange(venues);
+            context.VoxEvents.AddRange(voxEvents);
+            context.Members.AddRange(members);
+            context.SaveChanges();
         }
     }
 }

@@ -23,7 +23,7 @@ namespace VoxEvents.API.Controllers
         [HttpGet("events/{eventId}/availabilities")]
         public IActionResult GetEventAllAvailabilities(int eventId)
         {
-            var eventToCheck = EventsDataStore.Current.Events.FirstOrDefault(e => e.Id == eventId);
+            var eventToCheck = VoxEventsDataStore.Current.Events.FirstOrDefault(e => e.Id == eventId);
 
             if (eventToCheck == null)
             {
@@ -37,7 +37,7 @@ namespace VoxEvents.API.Controllers
         [HttpGet("members/{memberId}/availabilities")]
         public IActionResult GetMemberAllAvailabilities(int memberId)
         {
-            var member = EventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
+            var member = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
 
             if (member == null)
             {
@@ -55,7 +55,7 @@ namespace VoxEvents.API.Controllers
             {
                 //throw new Exception("A well-bred exception");
 
-                var member = EventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
+                var member = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
                 if (member == null)
                 {
                     _logger.LogInformation($"Member with id {memberId} not found");
@@ -91,7 +91,7 @@ namespace VoxEvents.API.Controllers
                 return BadRequest();
             }
 
-            var member = EventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
+            var member = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
             if (member == null)
             {
                 return NotFound();
@@ -120,7 +120,7 @@ namespace VoxEvents.API.Controllers
                 return BadRequest();
             }
 
-            var member = EventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
+            var member = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
             if (member == null)
             {
                 return NotFound();

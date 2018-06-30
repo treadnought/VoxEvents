@@ -11,8 +11,8 @@ using VoxEvents.API.Entities;
 namespace VoxEvents.API.Migrations
 {
     [DbContext(typeof(VoxEventsContext))]
-    [Migration("20180628035717_VoxEventsDBInitial")]
-    partial class VoxEventsDBInitial
+    [Migration("20180630063001_PartToString")]
+    partial class PartToString
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,19 +41,42 @@ namespace VoxEvents.API.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .IsRequired();
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
-                    b.Property<string>("LastName");
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
-                    b.Property<int>("Part");
+                    b.Property<string>("Part");
 
                     b.Property<string>("Phone");
 
                     b.HasKey("Id");
 
                     b.ToTable("Members");
+                });
+
+            modelBuilder.Entity("VoxEvents.API.Entities.Venue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Address");
+
+                    b.Property<bool>("HasPiano");
+
+                    b.Property<string>("VenueName")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Venues");
                 });
 
             modelBuilder.Entity("VoxEvents.API.Entities.VoxEvent", b =>
@@ -67,15 +90,15 @@ namespace VoxEvents.API.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<string>("EventVenue")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
                     b.Property<DateTime>("PerformanceTime");
 
                     b.Property<DateTime>("RehearsalTime");
 
+                    b.Property<int>("VenueId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("VenueId");
 
                     b.ToTable("VoxEvents");
                 });
@@ -90,6 +113,14 @@ namespace VoxEvents.API.Migrations
                     b.HasOne("VoxEvents.API.Entities.VoxEvent", "VoxEvent")
                         .WithMany("Availabilities")
                         .HasForeignKey("VoxEventId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("VoxEvents.API.Entities.VoxEvent", b =>
+                {
+                    b.HasOne("VoxEvents.API.Entities.Venue", "Venue")
+                        .WithMany()
+                        .HasForeignKey("VenueId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

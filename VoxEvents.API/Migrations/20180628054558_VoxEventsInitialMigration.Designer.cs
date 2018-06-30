@@ -11,9 +11,10 @@ using VoxEvents.API.Entities;
 namespace VoxEvents.API.Migrations
 {
     [DbContext(typeof(VoxEventsContext))]
-    partial class VoxEventsContextModelSnapshot : ModelSnapshot
+    [Migration("20180628054558_VoxEventsInitialMigration")]
+    partial class VoxEventsInitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,7 +52,7 @@ namespace VoxEvents.API.Migrations
                         .IsRequired()
                         .HasMaxLength(20);
 
-                    b.Property<string>("Part");
+                    b.Property<int>("Part");
 
                     b.Property<string>("Phone");
 

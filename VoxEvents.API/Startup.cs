@@ -33,8 +33,10 @@ namespace VoxEvents.API
                 .AddMvcOptions(o => o.OutputFormatters.Add(
                     new XmlDataContractSerializerOutputFormatter()));
 
-            var connectionString = @"Server=(localdb)\MSSQLLocalDB;Database=VoxEventsDB;Trusted_Connection=True";
+            var connectionString = Startup.Configuration["connectionStrings:voxEventsConnectionString"];
             services.AddDbContext<VoxEventsContext>(o => o.UseSqlServer(connectionString));
+
+            services.AddScoped<IVoxEventsRepository, VoxEventsRepository>();
 
 #if DEBUG
             services.AddTransient<IMailService, LocalMailService>();
@@ -44,7 +46,8 @@ namespace VoxEvents.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
+            VoxEventsContext voxEventsContext)
         {
             loggerFactory.AddNLog();
 
@@ -56,6 +59,8 @@ namespace VoxEvents.API
             {
                 app.UseExceptionHandler();
             }
+
+            voxEventsContext.EnsureSeedDataForContext();
 
             app.UseMvc();
         }

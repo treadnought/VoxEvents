@@ -6,15 +6,7 @@ using System.Threading.Tasks;
 
 namespace VoxEvents.API.Models
 {
-    //public enum Parts
-    //{
-    //    Soprano,
-    //    Alto,
-    //    Tenor,
-    //    Bass
-    //}
-
-    public class MemberDto
+    public class MemberNoAvailabilitiesDto
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -22,14 +14,5 @@ namespace VoxEvents.API.Models
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Part { get; set; }
-
-        public int NumberOfAvailabilities { get
-            {
-                return Availabilities.Count();
-            }
-        }
-
-        public ICollection<MemberAvailabilityDto> Availabilities { get; set; }
-            = new List<MemberAvailabilityDto>();
     }
 }

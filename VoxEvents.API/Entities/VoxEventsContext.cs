@@ -18,6 +18,7 @@ namespace VoxEvents.API.Entities
         public DbSet<VoxEvent> VoxEvents { get; set; }
         public DbSet<Member> Members { get; set; }
         public DbSet<Availability> Availabilities { get; set; }
+        public DbSet<Venue> Venues { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

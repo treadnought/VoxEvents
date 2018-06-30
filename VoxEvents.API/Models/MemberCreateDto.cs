@@ -14,6 +14,6 @@ namespace VoxEvents.API.Models
         [EmailAddress(ErrorMessage = "Email address is invalid")]
         public string Email { get; set; }
         public string Phone { get; set; }
-        public Parts Part { get; set; }
+        public string Part { get; set; }
     }
 }

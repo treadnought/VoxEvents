@@ -13,13 +13,13 @@ namespace VoxEvents.API.Controllers
         [HttpGet]
         public IActionResult GetVenues()
         {
-            return Ok(EventsDataStore.Current.Venues);
+            return Ok(VoxEventsDataStore.Current.Venues);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetVenue(int id)
         {
-            var venueToReturn = EventsDataStore.Current.Venues.FirstOrDefault(v => v.Id == id);
+            var venueToReturn = VoxEventsDataStore.Current.Venues.FirstOrDefault(v => v.Id == id);
             if (venueToReturn == null)
             {
                 return NotFound();

@@ -14,11 +14,14 @@ namespace VoxEvents.API.Controllers
     [Route("api/members")]
     public class MembersController : Controller
     {
+        private readonly IVoxEventsRepository _repository;
         private readonly ILogger<MembersController> _logger;
         private readonly IMailService _mailService;
 
-        public MembersController(ILogger<MembersController> logger, IMailService mailService)
+        public MembersController(IVoxEventsRepository repository, ILogger<MembersController> logger, 
+            IMailService mailService)
         {
+            _repository = repository;
             _logger = logger;
             _mailService = mailService;
         }
@@ -26,13 +29,31 @@ namespace VoxEvents.API.Controllers
         [HttpGet]
         public IActionResult GetMembers()
         {
-            return Ok(EventsDataStore.Current.Members);
+            var memberEntities = _repository.GetMembers();
+
+            var results = new List<MemberNoAvailabilitiesDto>();
+
+            foreach (var memberEntity in memberEntities)
+            {
+                results.Add(new MemberNoAvailabilitiesDto
+                {
+                    Id = memberEntity.Id,
+                    FirstName = memberEntity.FirstName,
+                    LastName = memberEntity.LastName,
+                    Email = memberEntity.Email,
+                    Phone = memberEntity.Phone,
+                    Part = memberEntity.Part
+                });
+            }
+
+            return Ok(results);
+            //return Ok(VoxEventsDataStore.Current.Members);
         }
 
         [HttpGet("{id}", Name = "GetMember")]
         public IActionResult GetMember(int id)
         {
-            var memberToReturn = EventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
+            var memberToReturn = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
 
             if (memberToReturn == null)
             {
@@ -55,7 +76,7 @@ namespace VoxEvents.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var maxMemberId = EventsDataStore.Current.Members.Max(m => m.Id);
+            var maxMemberId = VoxEventsDataStore.Current.Members.Max(m => m.Id);
 
             var memberToAdd = new MemberDto()
             {
@@ -67,7 +88,7 @@ namespace VoxEvents.API.Controllers
                 Part = member.Part
             };
 
-            EventsDataStore.Current.Members.Add(memberToAdd);
+            VoxEventsDataStore.Current.Members.Add(memberToAdd);
 
             return CreatedAtRoute("GetMember", new
             { id = memberToAdd.Id }, memberToAdd);
@@ -86,7 +107,7 @@ namespace VoxEvents.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var memberFromStore = EventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
+            var memberFromStore = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
 
             if (memberFromStore == null)
             {
@@ -110,7 +131,7 @@ namespace VoxEvents.API.Controllers
                 return BadRequest();
             }
 
-            var memberFromStore = EventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
+            var memberFromStore = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
 
             if (memberFromStore == null)
             {
@@ -147,14 +168,14 @@ namespace VoxEvents.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteMember(int id)
         {
-            var memberFromStore = EventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
+            var memberFromStore = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
 
             if (memberFromStore == null)
             {
                 return NotFound();
             }
 
-            EventsDataStore.Current.Members.Remove(memberFromStore);
+            VoxEventsDataStore.Current.Members.Remove(memberFromStore);
 
             _mailService.Send("Member Deleted", $"Member {memberFromStore.FirstName} {memberFromStore.LastName} with id {id} deleted.");
 

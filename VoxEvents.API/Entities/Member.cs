@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace VoxEvents.API.Entities
 {
-    public enum Parts
-    {
-        Soprano,
-        Alto,
-        Tenor,
-        Bass
-    }
+    //public enum Parts
+    //{
+    //    Soprano,
+    //    Alto,
+    //    Tenor,
+    //    Bass
+    //}
 
     public class Member
     {
@@ -36,7 +36,7 @@ namespace VoxEvents.API.Entities
 
         public string Phone { get; set; }
 
-        public Parts Part { get; set; }
+        public string Part { get; set; }
 
         public ICollection<Availability> Availabilities { get; set; }
             = new List<Availability>();

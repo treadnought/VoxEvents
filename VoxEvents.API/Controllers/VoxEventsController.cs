@@ -14,13 +14,13 @@ namespace VoxEvents.API.Controllers
         [HttpGet]
         public IActionResult GetEvents()
         {
-            return Ok(EventsDataStore.Current.Events);
+            return Ok(VoxEventsDataStore.Current.Events);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetEvent(int id)
         {
-            var eventToReturn = EventsDataStore.Current.Events.FirstOrDefault(e => e.Id == id);
+            var eventToReturn = VoxEventsDataStore.Current.Events.FirstOrDefault(e => e.Id == id);
             if (eventToReturn == null)
             {
                 return NotFound();
