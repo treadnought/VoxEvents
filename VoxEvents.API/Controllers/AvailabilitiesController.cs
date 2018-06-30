@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -25,24 +26,32 @@ namespace VoxEvents.API.Controllers
         }
 
         [HttpGet("events/{eventId}/availabilities")]
-        public IActionResult GetEventAllAvailabilities(int eventId)
+        public IActionResult GetVoxEventAllAvailabilities(int eventId)
         {
-            var eventToCheck = VoxEventsDataStore.Current.Events.FirstOrDefault(e => e.Id == eventId);
-
-            if (eventToCheck == null)
+            try
             {
-                _logger.LogInformation($"Event with id {eventId} not found when getting all availabilities");
-                return NotFound();
-            }
+                if (!_repository.VoxEventExists(eventId))
+                {
+                    _logger.LogInformation($"Event with id {eventId} not found when getting all availabilities");
+                    return NotFound();
+                }
 
-            return Ok(eventToCheck.Availabilities);
+                var voxEventAvailabilityEntities = _repository.GetVoxEventAllAvailabilities(eventId);
+
+                var results = Mapper.Map<IEnumerable<VoxEventAvailabilityDto>>(voxEventAvailabilityEntities);
+
+                return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception getting event id {eventId}'s availabilities", ex);
+                return StatusCode(500, "A problem occurred handling your request");
+            }
         }
 
         [HttpGet("members/{memberId}/availabilities")]
         public IActionResult GetMemberAllAvailabilities(int memberId)
         {
-            //var member = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
-
             try
             {
                 if (!_repository.MemberExists(memberId))
@@ -51,18 +60,9 @@ namespace VoxEvents.API.Controllers
                     return NotFound();
                 }
 
-                var availabilitesForMemberEntities = _repository.GetMemberAllAvailabilities(memberId);
+                var availabilitiesForMemberEntities = _repository.GetMemberAllAvailabilities(memberId);
 
-                var results = new List<MemberAvailabilityDto>();
-
-                foreach (var availabilityEntity in availabilitesForMemberEntities)
-                {
-                    results.Add(new MemberAvailabilityDto
-                    {
-                        VoxEventId = availabilityEntity.VoxEventId,
-                        Available = availabilityEntity.Available
-                    });
-                }
+                var results = Mapper.Map<IEnumerable<MemberAvailabilityDto>>(availabilitiesForMemberEntities);
 
                 return Ok(results);
             }
@@ -97,20 +97,6 @@ namespace VoxEvents.API.Controllers
                 };
 
                 return Ok(result);
-                //var member = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
-                //if (member == null)
-                //{
-                //    _logger.LogInformation($"Member with id {memberId} not found");
-                //    return NotFound();
-                //}
-
-                //var availability = member.Availabilities.FirstOrDefault(e => e.VoxEventId == eventId);
-                //if (availability == null)
-                //{
-                //    return NotFound();
-                //}
-
-                //return Ok(availability);
             }
             catch(Exception ex)
             {

@@ -74,5 +74,15 @@ namespace VoxEvents.API.Services
         {
             return _context.Availabilities.Where(a => a.MemberId == memberId).ToList();
         }
+
+        public bool VoxEventExists(int voxEventId)
+        {
+            return _context.VoxEvents.Any(v => v.Id == voxEventId);
+        }
+
+        public IEnumerable<Availability> GetVoxEventAllAvailabilities(int voxEventId)
+        {
+            return _context.Availabilities.Where(a => a.VoxEventId == voxEventId);
+        }
     }
 }

@@ -51,52 +51,12 @@ namespace VoxEvents.API.Controllers
             {
                 var memberResult = Mapper.Map<MemberDto>(memberEntity);
 
-                //var memberResult = new MemberDto()
-                //{
-                //    Id = member.Id,
-                //    FirstName = member.FirstName,
-                //    LastName = member.LastName,
-                //    Email = member.Email,
-                //    Phone = member.Phone,
-                //    Part = member.Part
-                //};
-
-                //foreach (var av in member.Availabilities)
-                //{
-                //    memberResult.Availabilities.Add(
-                //        new MemberAvailabilityDto()
-                //        {
-                //           MemberId = av.MemberId,
-                //           VoxEventId = av.VoxEventId,
-                //           Available = av.Available
-                //        });
-                //}
-
                 return Ok(memberResult);
             }
 
             var memberNoAvailabilitiesResult = Mapper.Map<MemberNoAvailabilitiesDto>(memberEntity);
 
-            //var memberNoAvailabilitiesResult = new MemberNoAvailabilitiesDto()
-            //{
-            //    Id = memberEntity.Id,
-            //    FirstName = memberEntity.FirstName,
-            //    LastName = memberEntity.LastName,
-            //    Email = memberEntity.Email,
-            //    Phone = memberEntity.Phone,
-            //    Part = memberEntity.Part
-            //};
-
             return Ok(memberNoAvailabilitiesResult);
-
-            //var memberToReturn = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
-
-            //if (memberToReturn == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //return Ok(memberToReturn);
         }
 
         [HttpPost]

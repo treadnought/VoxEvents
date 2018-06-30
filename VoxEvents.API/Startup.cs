@@ -68,6 +68,8 @@ namespace VoxEvents.API
             {
                 cfg.CreateMap<Entities.Member, Models.MemberNoAvailabilitiesDto>();
                 cfg.CreateMap<Entities.Member, Models.MemberDto>();
+                cfg.CreateMap<Entities.Availability, Models.MemberAvailabilityDto>();
+                cfg.CreateMap<Entities.Availability, Models.VoxEventAvailabilityDto>();
             });
         }
     }

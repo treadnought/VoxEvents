@@ -12,10 +12,12 @@ namespace VoxEvents.API.Services
         Venue GetVenue(int venueId);
         IEnumerable<VoxEvent> GetVoxEvents();
         VoxEvent GetVoxEvent(int voxEventId, bool includeAvailabilities);
+        IEnumerable<Availability> GetVoxEventAllAvailabilities(int voxEventId);
         IEnumerable<Member> GetMembers();
         IEnumerable<Availability> GetMemberAllAvailabilities(int memberId);
         Member GetMember(int memberId, bool includeAvailabilities);
         Availability GetMemberAvailability(int memberId, int voxEventId);
         bool MemberExists(int memberId);
+        bool VoxEventExists(int voxEventId);
     }
 }
