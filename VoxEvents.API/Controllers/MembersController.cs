@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -31,36 +32,71 @@ namespace VoxEvents.API.Controllers
         {
             var memberEntities = _repository.GetMembers();
 
-            var results = new List<MemberNoAvailabilitiesDto>();
-
-            foreach (var memberEntity in memberEntities)
-            {
-                results.Add(new MemberNoAvailabilitiesDto
-                {
-                    Id = memberEntity.Id,
-                    FirstName = memberEntity.FirstName,
-                    LastName = memberEntity.LastName,
-                    Email = memberEntity.Email,
-                    Phone = memberEntity.Phone,
-                    Part = memberEntity.Part
-                });
-            }
+            var results = Mapper.Map<IEnumerable<MemberNoAvailabilitiesDto>>(memberEntities);
 
             return Ok(results);
-            //return Ok(VoxEventsDataStore.Current.Members);
         }
 
         [HttpGet("{id}", Name = "GetMember")]
-        public IActionResult GetMember(int id)
+        public IActionResult GetMember(int id, bool includeAvailabilities = false)
         {
-            var memberToReturn = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
+            var memberEntity = _repository.GetMember(id, includeAvailabilities);
 
-            if (memberToReturn == null)
+            if (memberEntity == null)
             {
                 return NotFound();
             }
 
-            return Ok(memberToReturn);
+            if (includeAvailabilities)
+            {
+                var memberResult = Mapper.Map<MemberDto>(memberEntity);
+
+                //var memberResult = new MemberDto()
+                //{
+                //    Id = member.Id,
+                //    FirstName = member.FirstName,
+                //    LastName = member.LastName,
+                //    Email = member.Email,
+                //    Phone = member.Phone,
+                //    Part = member.Part
+                //};
+
+                //foreach (var av in member.Availabilities)
+                //{
+                //    memberResult.Availabilities.Add(
+                //        new MemberAvailabilityDto()
+                //        {
+                //           MemberId = av.MemberId,
+                //           VoxEventId = av.VoxEventId,
+                //           Available = av.Available
+                //        });
+                //}
+
+                return Ok(memberResult);
+            }
+
+            var memberNoAvailabilitiesResult = Mapper.Map<MemberNoAvailabilitiesDto>(memberEntity);
+
+            //var memberNoAvailabilitiesResult = new MemberNoAvailabilitiesDto()
+            //{
+            //    Id = memberEntity.Id,
+            //    FirstName = memberEntity.FirstName,
+            //    LastName = memberEntity.LastName,
+            //    Email = memberEntity.Email,
+            //    Phone = memberEntity.Phone,
+            //    Part = memberEntity.Part
+            //};
+
+            return Ok(memberNoAvailabilitiesResult);
+
+            //var memberToReturn = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
+
+            //if (memberToReturn == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //return Ok(memberToReturn);
         }
 
         [HttpPost]

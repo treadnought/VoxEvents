@@ -63,6 +63,12 @@ namespace VoxEvents.API
             voxEventsContext.EnsureSeedDataForContext();
 
             app.UseMvc();
+
+            AutoMapper.Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<Entities.Member, Models.MemberNoAvailabilitiesDto>();
+                cfg.CreateMap<Entities.Member, Models.MemberDto>();
+            });
         }
     }
 }

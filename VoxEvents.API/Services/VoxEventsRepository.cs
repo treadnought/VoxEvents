@@ -17,6 +17,11 @@ namespace VoxEvents.API.Services
             _context = context;
         }
 
+        public bool MemberExists(int memberId)
+        {
+            return _context.Members.Any(m => m.Id == memberId);
+        }
+
         public Member GetMember(int memberId, bool includeAvailabilities)
         {
             if (includeAvailabilities)
@@ -63,6 +68,11 @@ namespace VoxEvents.API.Services
         public IEnumerable<VoxEvent> GetVoxEvents()
         {
             return _context.VoxEvents.OrderBy(e => e.EventDate).ToList();
+        }
+
+        public IEnumerable<Availability> GetMemberAllAvailabilities(int memberId)
+        {
+            return _context.Availabilities.Where(a => a.MemberId == memberId).ToList();
         }
     }
 }
