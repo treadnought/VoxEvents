@@ -1,31 +1,80 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VoxEvents.API.Models;
+using VoxEvents.API.Services;
 
 namespace VoxEvents.API.Controllers
 {
     [Route("api/events")]
     public class VoxEventsController : Controller
     {
-        [HttpGet]
-        public IActionResult GetEvents()
+        private readonly IVoxEventsRepository _repository;
+        private readonly ILogger<VoxEventsController> _logger;
+
+        public VoxEventsController(IVoxEventsRepository repository, ILogger<VoxEventsController> logger)
         {
-            return Ok(VoxEventsDataStore.Current.Events);
+            _repository = repository;
+            _logger = logger;
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetEvent(int id)
+        [HttpGet]
+        public IActionResult GetVoxEvents()
         {
-            var eventToReturn = VoxEventsDataStore.Current.Events.FirstOrDefault(e => e.Id == id);
-            if (eventToReturn == null)
+            try
             {
-                return NotFound();
+                var voxEventEntities = _repository.GetVoxEvents();
+
+                var results = Mapper.Map<IEnumerable<VoxEventNoAvailabilitiesDto>>(voxEventEntities);
+
+                return Ok(results);
             }
-            return Ok(eventToReturn);
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception getting events", ex);
+                return StatusCode(500, "A problem occurred handling your request");
+            }
+        }
+
+        [HttpGet("{id}", Name = "GetVoxEvent")]
+        public IActionResult GetVoxEvent(int id, bool includeAvailabilities = false)
+        {
+            try
+            {
+                var voxEventEntity = _repository.GetVoxEvent(id, includeAvailabilities);
+
+                if (voxEventEntity == null)
+                {
+                    return NotFound();
+                }
+
+                if (includeAvailabilities)
+                {
+                    var voxEventResult = Mapper.Map<VoxEventDto>(voxEventEntity);
+
+                    return Ok(voxEventResult);
+                }
+
+                var voxEventNoAvailabilitiesResult = Mapper.Map<VoxEventNoAvailabilitiesDto>(voxEventEntity);
+                return Ok(voxEventNoAvailabilitiesResult);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception getting event id {id}", ex);
+                return StatusCode(500, "A problem occurred handling your request");
+            }
+
+            //var eventToReturn = VoxEventsDataStore.Current.Events.FirstOrDefault(e => e.Id == id);
+            //if (eventToReturn == null)
+            //{
+            //    return NotFound();
+            //}
+            //return Ok(eventToReturn);
         }
 
         //[HttpPost]

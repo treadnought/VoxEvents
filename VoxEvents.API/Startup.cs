@@ -70,6 +70,10 @@ namespace VoxEvents.API
                 cfg.CreateMap<Entities.Member, Models.MemberDto>();
                 cfg.CreateMap<Entities.Availability, Models.MemberAvailabilityDto>();
                 cfg.CreateMap<Entities.Availability, Models.VoxEventAvailabilityDto>();
+                cfg.CreateMap<Entities.VoxEvent, Models.VoxEventNoAvailabilitiesDto>();
+                cfg.CreateMap<Entities.VoxEvent, Models.VoxEventDto>();
+                cfg.CreateMap<Entities.Venue, Models.VenueNoEventsDto>();
+                cfg.CreateMap<Entities.Venue, Models.VenueDto>();
             });
         }
     }

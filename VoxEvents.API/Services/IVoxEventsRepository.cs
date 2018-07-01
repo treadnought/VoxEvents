@@ -9,7 +9,7 @@ namespace VoxEvents.API.Services
     public interface IVoxEventsRepository
     {
         IEnumerable<Venue> GetVenues();
-        Venue GetVenue(int venueId);
+        Venue GetVenue(int venueId, bool includeEvents);
         IEnumerable<VoxEvent> GetVoxEvents();
         VoxEvent GetVoxEvent(int voxEventId, bool includeAvailabilities);
         IEnumerable<Availability> GetVoxEventAllAvailabilities(int voxEventId);

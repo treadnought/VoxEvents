@@ -44,11 +44,6 @@ namespace VoxEvents.API.Services
             return _context.Members.OrderBy(m => m.LastName).ToList();
         }
 
-        public Venue GetVenue(int venueId)
-        {
-            return _context.Venues.Where(v => v.Id == venueId).FirstOrDefault();
-        }
-
         public IEnumerable<Venue> GetVenues()
         {
             return _context.Venues.OrderBy(v => v.VenueName).ToList();
@@ -67,7 +62,7 @@ namespace VoxEvents.API.Services
 
         public IEnumerable<VoxEvent> GetVoxEvents()
         {
-            return _context.VoxEvents.OrderBy(e => e.EventDate).ToList();
+            return _context.VoxEvents.OrderBy(v => v.EventDate).ToList();
         }
 
         public IEnumerable<Availability> GetMemberAllAvailabilities(int memberId)
@@ -83,6 +78,16 @@ namespace VoxEvents.API.Services
         public IEnumerable<Availability> GetVoxEventAllAvailabilities(int voxEventId)
         {
             return _context.Availabilities.Where(a => a.VoxEventId == voxEventId);
+        }
+
+        public Venue GetVenue(int venueId, bool includeEvents)
+        {
+            if (includeEvents)
+            {
+                return _context.Venues.Include(v => v.VoxEvents)
+                    .Where(v => v.Id == venueId).FirstOrDefault();
+            }
+            return _context.Venues.Where(v => v.Id == venueId).FirstOrDefault();
         }
     }
 }

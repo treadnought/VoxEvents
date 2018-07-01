@@ -30,33 +30,49 @@ namespace VoxEvents.API.Controllers
         [HttpGet]
         public IActionResult GetMembers()
         {
-            var memberEntities = _repository.GetMembers();
+            try
+            {
+                var memberEntities = _repository.GetMembers();
 
-            var results = Mapper.Map<IEnumerable<MemberNoAvailabilitiesDto>>(memberEntities);
+                var results = Mapper.Map<IEnumerable<MemberNoAvailabilitiesDto>>(memberEntities);
 
-            return Ok(results);
+                return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception getting members", ex);
+                return StatusCode(500, "A problem occurred handling your request");
+            }
         }
 
         [HttpGet("{id}", Name = "GetMember")]
         public IActionResult GetMember(int id, bool includeAvailabilities = false)
         {
-            var memberEntity = _repository.GetMember(id, includeAvailabilities);
-
-            if (memberEntity == null)
+            try
             {
-                return NotFound();
-            }
+                var memberEntity = _repository.GetMember(id, includeAvailabilities);
 
-            if (includeAvailabilities)
+                if (memberEntity == null)
+                {
+                    return NotFound();
+                }
+
+                if (includeAvailabilities)
+                {
+                    var memberResult = Mapper.Map<MemberDto>(memberEntity);
+
+                    return Ok(memberResult);
+                }
+
+                var memberNoAvailabilitiesResult = Mapper.Map<MemberNoAvailabilitiesDto>(memberEntity);
+
+                return Ok(memberNoAvailabilitiesResult);
+            }
+            catch (Exception ex)
             {
-                var memberResult = Mapper.Map<MemberDto>(memberEntity);
-
-                return Ok(memberResult);
+                _logger.LogCritical($"Exception getting member id {id}", ex);
+                return StatusCode(500, "A problem occurred handling your request");
             }
-
-            var memberNoAvailabilitiesResult = Mapper.Map<MemberNoAvailabilitiesDto>(memberEntity);
-
-            return Ok(memberNoAvailabilitiesResult);
         }
 
         [HttpPost]

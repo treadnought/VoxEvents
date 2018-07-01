@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VoxEvents.API.Models
 {
-    public class VenueDto
+    public class VenueNoEventsDto
     {
         public int Id { get; set; }
         public string VenueName { get; set; }
@@ -15,13 +15,5 @@ namespace VoxEvents.API.Models
         public string ContactPhone { get; set; }
         public string ContactEmail { get; set; }
         public bool HasPiano { get; set; }
-
-        public int NumberOfEvents { get
-            {
-                return VoxEvents.Count();
-            }
-        }
-
-        public ICollection<VoxEventDto> VoxEvents { get; set; } = new List<VoxEventDto>();
     }
 }

@@ -11,9 +11,10 @@ using VoxEvents.API.Entities;
 namespace VoxEvents.API.Migrations
 {
     [DbContext(typeof(VoxEventsContext))]
-    partial class VoxEventsContextModelSnapshot : ModelSnapshot
+    [Migration("20180701033606_AddFieldsToVenues")]
+    partial class AddFieldsToVenues
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

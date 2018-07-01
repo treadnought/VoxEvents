@@ -15,6 +15,11 @@ namespace VoxEvents.API.Entities
         [MaxLength(30)]
         public string VenueName { get; set; }
         public string Address { get; set; }
+        public string ContactPerson { get; set; }
+        public string ContactPhone { get; set; }
+        public string ContactEmail { get; set; }
         public bool HasPiano { get; set; }
+
+        public ICollection<VoxEvent> VoxEvents { get; set; } = new List<VoxEvent>();
     }
 }
