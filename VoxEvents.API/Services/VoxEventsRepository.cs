@@ -89,5 +89,23 @@ namespace VoxEvents.API.Services
             }
             return _context.Venues.Where(v => v.Id == venueId).FirstOrDefault();
         }
+
+        public void AddMemberAvailability(int memberId, Availability availability)
+        {
+            var member = GetMember(memberId, false);
+
+            member.Availabilities.Add(availability);
+        }
+
+        public bool Save()
+        {
+            return (_context.SaveChanges() >= 0);
+        }
+
+        public bool AvailabilityExists(int memberId, int voxEventId)
+        {
+            var availabilityExists = _context.Availabilities.Any(a => a.MemberId == memberId && a.VoxEventId == voxEventId);
+            return availabilityExists;
+        }
     }
 }

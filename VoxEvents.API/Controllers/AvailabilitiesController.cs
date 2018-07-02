@@ -73,7 +73,7 @@ namespace VoxEvents.API.Controllers
             }
         }
 
-        [HttpGet("members/{memberId}/availabilities/{eventId}", Name = "GetAvailability")]
+        [HttpGet("members/{memberId}/availabilities/{voxEventId}", Name = "GetAvailability")]
         public IActionResult GetMemberAvailability(int memberId, int eventId)
         {
             try
@@ -109,6 +109,12 @@ namespace VoxEvents.API.Controllers
         public IActionResult CreateMemberAvailability(int memberId,
             [FromBody] MemberAvailabilityCreateDto availability)
         {
+            if (_repository.AvailabilityExists(memberId, availability.VoxEventId))
+            {
+                _logger.LogInformation($"Availability for member {memberId} event {availability.VoxEventId} already exists");
+                return BadRequest();
+            }
+
             if (availability == null)
             {
                 return BadRequest();
@@ -119,23 +125,24 @@ namespace VoxEvents.API.Controllers
                 return BadRequest();
             }
 
-            var member = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
-            if (member == null)
+            if (!_repository.MemberExists(memberId))
             {
                 return NotFound();
             }
 
-            var finalMemberAvailability = new MemberAvailabilityDto()
+            var finalMemberAvailability = Mapper.Map<Entities.Availability>(availability);
+
+            _repository.AddMemberAvailability(memberId, finalMemberAvailability);
+
+            if (!_repository.Save())
             {
-                VoxEventId = availability.VoxEventId,
-                Available = availability.Available
-            };
+                return StatusCode(500, "A problem occurred handling your request");
+            }
 
-            member.Availabilities.Add(finalMemberAvailability);
+            var newAvailability = Mapper.Map<Models.MemberAvailabilityDto>(finalMemberAvailability);
 
-            return CreatedAtRoute("GetAvailability", new
-                { memberId, eventId = availability.VoxEventId }, 
-                finalMemberAvailability);
+            return CreatedAtRoute("GetAvailability", new {
+                memberId, voxEventId = newAvailability.VoxEventId }, newAvailability);
         }
 
         [HttpPatch("members/{memberId}/availabilities/{eventId}")]

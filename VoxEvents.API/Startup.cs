@@ -74,6 +74,7 @@ namespace VoxEvents.API
                 cfg.CreateMap<Entities.VoxEvent, Models.VoxEventDto>();
                 cfg.CreateMap<Entities.Venue, Models.VenueNoEventsDto>();
                 cfg.CreateMap<Entities.Venue, Models.VenueDto>();
+                cfg.CreateMap<Models.MemberAvailabilityCreateDto, Entities.Availability>();
             });
         }
     }
