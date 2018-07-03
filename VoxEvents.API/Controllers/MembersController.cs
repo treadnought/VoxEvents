@@ -88,22 +88,19 @@ namespace VoxEvents.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var maxMemberId = VoxEventsDataStore.Current.Members.Max(m => m.Id);
+            var memberToAdd = Mapper.Map<Entities.Member>(member);
 
-            var memberToAdd = new MemberDto()
+            _repository.AddMember(memberToAdd);
+
+            if (!_repository.Save())
             {
-                Id = ++maxMemberId,
-                FirstName = member.FirstName,
-                LastName = member.LastName,
-                Email = member.Email,
-                Phone = member.Phone,
-                Part = member.Part
-            };
+                return StatusCode(500, "A problem occurred handling your request");
+            }
 
-            VoxEventsDataStore.Current.Members.Add(memberToAdd);
+            var newMember = Mapper.Map<MemberDto>(memberToAdd);
 
             return CreatedAtRoute("GetMember", new
-            { id = memberToAdd.Id }, memberToAdd);
+            { id = newMember.Id }, newMember);
         }
 
         [HttpPut("{id}")]

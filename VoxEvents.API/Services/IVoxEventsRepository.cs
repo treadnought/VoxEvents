@@ -21,6 +21,9 @@ namespace VoxEvents.API.Services
         bool VoxEventExists(int voxEventId);
         bool AvailabilityExists(int memberId, int voxEventId);
         void AddMemberAvailability(int memberId, Availability availability);
+        void AddMember(Member member);
+        void AddVoxEvent(VoxEvent voxEvent);
+        void AddVenue(Venue venue);
         bool Save();
     }
 }

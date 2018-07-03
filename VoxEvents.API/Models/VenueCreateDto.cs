@@ -9,7 +9,6 @@ namespace VoxEvents.API.Models
 {
     public class VenueCreateDto
     {
-        public int Id { get; set; }
         [Required]
         [MaxLength(50)]
         public string VenueName { get; set; }

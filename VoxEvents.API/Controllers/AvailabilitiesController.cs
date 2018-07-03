@@ -74,7 +74,7 @@ namespace VoxEvents.API.Controllers
         }
 
         [HttpGet("members/{memberId}/availabilities/{voxEventId}", Name = "GetAvailability")]
-        public IActionResult GetMemberAvailability(int memberId, int eventId)
+        public IActionResult GetMemberAvailability(int memberId, int voxEventId)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace VoxEvents.API.Controllers
                     return NotFound();
                 }
 
-                var availabilityEntity = _repository.GetMemberAvailability(memberId, eventId);
+                var availabilityEntity = _repository.GetMemberAvailability(memberId, voxEventId);
 
                 if (availabilityEntity == null)
                 {
@@ -100,7 +100,7 @@ namespace VoxEvents.API.Controllers
             }
             catch(Exception ex)
             {
-                _logger.LogCritical($"Exception getting member id {memberId}'s availability for event id {eventId}", ex);
+                _logger.LogCritical($"Exception getting member id {memberId}'s availability for event id {voxEventId}", ex);
                 return StatusCode(500, "A white person's problem occurred handling your request");
             }
         }
@@ -139,7 +139,7 @@ namespace VoxEvents.API.Controllers
                 return StatusCode(500, "A problem occurred handling your request");
             }
 
-            var newAvailability = Mapper.Map<Models.MemberAvailabilityDto>(finalMemberAvailability);
+            var newAvailability = Mapper.Map<MemberAvailabilityDto>(finalMemberAvailability);
 
             return CreatedAtRoute("GetAvailability", new {
                 memberId, voxEventId = newAvailability.VoxEventId }, newAvailability);

@@ -11,7 +11,7 @@ using VoxEvents.API.Services;
 
 namespace VoxEvents.API.Controllers
 {
-    [Route("api/events")]
+    [Route("api/voxevents")]
     public class VoxEventsController : Controller
     {
         private readonly IVoxEventsRepository _repository;
@@ -68,29 +68,40 @@ namespace VoxEvents.API.Controllers
                 _logger.LogCritical($"Exception getting event id {id}", ex);
                 return StatusCode(500, "A problem occurred handling your request");
             }
-
-            //var eventToReturn = VoxEventsDataStore.Current.Events.FirstOrDefault(e => e.Id == id);
-            //if (eventToReturn == null)
-            //{
-            //    return NotFound();
-            //}
-            //return Ok(eventToReturn);
         }
+        [HttpPost]
+        public IActionResult CreateVoxEvent([FromBody] VoxEventCreateDto voxEvent)
+        {
+            try
+            {
+                if (voxEvent == null)
+                {
+                    return BadRequest();
+                }
 
-        //[HttpPost]
-        //public IActionResult CreateEvent([FromBody] VoxEventCreateDto choirEvent)
-        //{
-        //    if (choirEvent == null)
-        //    {
-        //        return BadRequest();
-        //    }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+                var voxEventToAdd = Mapper.Map<Entities.VoxEvent>(voxEvent);
 
+                _repository.AddVoxEvent(voxEventToAdd);
 
-        //}
+                if (!_repository.Save())
+                {
+                    return StatusCode(500, "A problem occurred handling your request");
+                }
+
+                var newVoxEvent = Mapper.Map<VoxEventDto>(voxEventToAdd);
+
+                return CreatedAtRoute("GetVoxEvent", new { id = newVoxEvent.Id }, newVoxEvent);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception creating Vox event", ex);
+                return StatusCode(500, "A problem occurred handling your request");
+            }
+        }
     }
 }

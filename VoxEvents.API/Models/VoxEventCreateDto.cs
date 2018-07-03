@@ -13,8 +13,7 @@ namespace VoxEvents.API.Models
         [MaxLength(50), MinLength(2)]
         public string EventName { get; set; }
         [Required(ErrorMessage = "Venue name is required")]
-        [MaxLength(50), MinLength(2)]
-        public string EventVenue { get; set; }
+        public int VenueId { get; set; }
         [DataType(DataType.DateTime)]
         public DateTime EventDate { get; set; }
         [DataType(DataType.DateTime)]

@@ -107,5 +107,20 @@ namespace VoxEvents.API.Services
             var availabilityExists = _context.Availabilities.Any(a => a.MemberId == memberId && a.VoxEventId == voxEventId);
             return availabilityExists;
         }
+
+        public void AddMember(Member member)
+        {
+            _context.Members.Add(member);
+        }
+
+        public void AddVoxEvent(VoxEvent voxEvent)
+        {
+            _context.VoxEvents.Add(voxEvent);
+        }
+
+        public void AddVenue(Venue venue)
+        {
+            _context.Venues.Add(venue);
+        }
     }
 }

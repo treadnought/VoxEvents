@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using VoxEvents.API.Entities;
+using VoxEvents.API.Models;
 using VoxEvents.API.Services;
 
 namespace VoxEvents.API
@@ -66,15 +67,18 @@ namespace VoxEvents.API
 
             AutoMapper.Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<Entities.Member, Models.MemberNoAvailabilitiesDto>();
-                cfg.CreateMap<Entities.Member, Models.MemberDto>();
-                cfg.CreateMap<Entities.Availability, Models.MemberAvailabilityDto>();
-                cfg.CreateMap<Entities.Availability, Models.VoxEventAvailabilityDto>();
-                cfg.CreateMap<Entities.VoxEvent, Models.VoxEventNoAvailabilitiesDto>();
-                cfg.CreateMap<Entities.VoxEvent, Models.VoxEventDto>();
-                cfg.CreateMap<Entities.Venue, Models.VenueNoEventsDto>();
-                cfg.CreateMap<Entities.Venue, Models.VenueDto>();
-                cfg.CreateMap<Models.MemberAvailabilityCreateDto, Entities.Availability>();
+                cfg.CreateMap<Member, MemberNoAvailabilitiesDto>();
+                cfg.CreateMap<Member, MemberDto>();
+                cfg.CreateMap<MemberCreateDto, Member>();
+                cfg.CreateMap<VoxEventCreateDto, VoxEvent>();
+                cfg.CreateMap<VenueCreateDto, Venue>();
+                cfg.CreateMap<Availability, MemberAvailabilityDto>();
+                cfg.CreateMap<Availability, VoxEventAvailabilityDto>();
+                cfg.CreateMap<VoxEvent, VoxEventNoAvailabilitiesDto>();
+                cfg.CreateMap<VoxEvent, VoxEventDto>();
+                cfg.CreateMap<Venue, VenueNoEventsDto>();
+                cfg.CreateMap<Venue, VenueDto>();
+                cfg.CreateMap<MemberAvailabilityCreateDto, Availability>();
             });
         }
     }

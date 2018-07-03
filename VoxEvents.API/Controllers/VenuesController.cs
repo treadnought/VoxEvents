@@ -67,5 +67,39 @@ namespace VoxEvents.API.Controllers
                 return StatusCode(500, "A problem occurred handling your request");
             }
         }
+
+        public IActionResult CreateVenue([FromBody] VenueCreateDto venue)
+        {
+            try
+            {
+                if (venue == null)
+                {
+                    return BadRequest();
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var venueToAdd = Mapper.Map<Entities.Venue>(venue);
+
+                _repository.AddVenue(venueToAdd);
+
+                if (!_repository.Save())
+                {
+                    return StatusCode(500, "A problem occurred adding the venue");
+                }
+
+                var newVenue = Mapper.Map<VenueDto>(venueToAdd);
+
+                return CreatedAtRoute("GetVenue", new { newVenue.Id }, newVenue);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception adding venue", ex);
+                return StatusCode(500, "A problem occurred handling your request");
+            }
+        }
     }
 }
