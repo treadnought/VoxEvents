@@ -109,96 +109,141 @@ namespace VoxEvents.API.Controllers
         public IActionResult CreateMemberAvailability(int memberId,
             [FromBody] MemberAvailabilityCreateDto availability)
         {
-            if (_repository.AvailabilityExists(memberId, availability.VoxEventId))
+            try
             {
-                _logger.LogInformation($"Availability for member {memberId} event {availability.VoxEventId} already exists");
-                return BadRequest();
-            }
+                if (_repository.AvailabilityExists(memberId, availability.VoxEventId))
+                {
+                    _logger.LogInformation($"Availability for member {memberId} event {availability.VoxEventId} already exists");
+                    return BadRequest();
+                }
 
-            if (availability == null)
+                if (availability == null)
+                {
+                    return BadRequest();
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+
+                if (!_repository.MemberExists(memberId))
+                {
+                    return NotFound();
+                }
+
+                var finalMemberAvailability = Mapper.Map<Entities.Availability>(availability);
+
+                _repository.AddMemberAvailability(memberId, finalMemberAvailability);
+
+                if (!_repository.Save())
+                {
+                    return StatusCode(500, "A problem occurred handling your request");
+                }
+
+                var newAvailability = Mapper.Map<MemberAvailabilityDto>(finalMemberAvailability);
+
+                return CreatedAtRoute("GetAvailability", new
+                {
+                    memberId,
+                    voxEventId = newAvailability.VoxEventId
+                }, newAvailability);
+            }
+            catch (Exception ex)
             {
-                return BadRequest();
+                _logger.LogCritical($"Exception adding member id {memberId}'s availability", ex);
+                return StatusCode(500, "A white person's problem occurred handling your request");
             }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            if (!_repository.MemberExists(memberId))
-            {
-                return NotFound();
-            }
-
-            var finalMemberAvailability = Mapper.Map<Entities.Availability>(availability);
-
-            _repository.AddMemberAvailability(memberId, finalMemberAvailability);
-
-            if (!_repository.Save())
-            {
-                return StatusCode(500, "A problem occurred handling your request");
-            }
-
-            var newAvailability = Mapper.Map<MemberAvailabilityDto>(finalMemberAvailability);
-
-            return CreatedAtRoute("GetAvailability", new {
-                memberId, voxEventId = newAvailability.VoxEventId }, newAvailability);
         }
 
-        [HttpPatch("members/{memberId}/availabilities/{eventId}")]
-        public IActionResult UpdateMemberAvailability(int memberId, int eventId, 
+        [HttpPut("members/{memberId}/availabilities/{voxEventId}")]
+        public IActionResult UpdateMemberAvailability(int memberId, int voxEventId, 
+            [FromBody] MemberAvailabilityUpdateDto availability)
+        {
+            try
+            {
+                if (availability == null)
+                {
+                    return BadRequest();
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (!_repository.MemberExists(memberId))
+                {
+                    return NotFound();
+                }
+
+                var memberAvailabilityEntity = _repository.GetMemberAvailability(memberId, voxEventId);
+
+                if (memberAvailabilityEntity == null)
+                {
+                    return NotFound();
+                }
+
+                // override values in entity with those from passed in object. EF will mark entity as modified
+                Mapper.Map(availability, memberAvailabilityEntity);
+
+                if (!_repository.Save())
+                {
+                    return StatusCode(500, "A problem occurred handling your request");
+                }
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception updating member id {memberId}'s availability for event id {voxEventId}", ex);
+                return StatusCode(500, "A white person's problem occurred handling your request");
+            }
+        }
+
+        [HttpPatch("members/{memberId}/availabilities/{voxEventId}")]
+        public IActionResult UpdateMemberAvailability(int memberId, int voxEventId, 
             [FromBody] JsonPatchDocument<MemberAvailabilityUpdateDto> patchDocument)
         {
-            if (patchDocument == null)
+            try
             {
-                return BadRequest();
+                if (patchDocument == null)
+                {
+                    return BadRequest();
+                }
+
+                var memberAvailabilityEntity = _repository.GetMemberAvailability(memberId, voxEventId);
+                if (memberAvailabilityEntity == null)
+                {
+                    return NotFound();
+                }
+
+                var availabilityToPatch = Mapper.Map<MemberAvailabilityUpdateDto>(memberAvailabilityEntity);
+
+                patchDocument.ApplyTo(availabilityToPatch, ModelState);
+
+                TryValidateModel(availabilityToPatch);
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                Mapper.Map(availabilityToPatch, memberAvailabilityEntity);
+
+                if (!_repository.Save())
+                {
+                    return StatusCode(500, "A problem occurred handling your request");
+                }
+
+                return NoContent();
+
             }
-
-            var member = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
-            if (member == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                _logger.LogCritical($"Exception patching member id {memberId}'s availability for event id {voxEventId}", ex);
+                return StatusCode(500, "A problem occurred handling your request");
             }
-
-            var availabilityFromStore = member.Availabilities.FirstOrDefault(a => a.VoxEventId == eventId);
-            if (availabilityFromStore == null)
-            {
-                return NotFound();
-            }
-
-            var availabilityToPatch = new MemberAvailabilityUpdateDto()
-            {
-                Available = availabilityFromStore.Available
-            };
-
-            patchDocument.ApplyTo(availabilityToPatch, ModelState);
-
-            TryValidateModel(availabilityToPatch);
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            availabilityFromStore.Available = availabilityToPatch.Available;
-
-            return NoContent();
         }
-
-        //[HttpGet("events/{eventId}/availabilities/{memberId}")]
-        //public IActionResult GetAvailability(int eventId, int memberId)
-        //{
-        //    var eventToCheck = EventsDataStore.Current.Events.FirstOrDefault(e => e.Id == eventId);
-        //    if (eventToCheck == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var memberToCheck = EventsDataStore.Current.Members.FirstOrDefault(m => m.Id == memberId);
-        //    if (memberToCheck == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //}
     }
 }

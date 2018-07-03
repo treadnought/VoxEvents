@@ -73,12 +73,14 @@ namespace VoxEvents.API
                 cfg.CreateMap<VoxEventCreateDto, VoxEvent>();
                 cfg.CreateMap<VenueCreateDto, Venue>();
                 cfg.CreateMap<Availability, MemberAvailabilityDto>();
+                cfg.CreateMap<Availability, MemberAvailabilityUpdateDto>();
                 cfg.CreateMap<Availability, VoxEventAvailabilityDto>();
                 cfg.CreateMap<VoxEvent, VoxEventNoAvailabilitiesDto>();
                 cfg.CreateMap<VoxEvent, VoxEventDto>();
                 cfg.CreateMap<Venue, VenueNoEventsDto>();
                 cfg.CreateMap<Venue, VenueDto>();
                 cfg.CreateMap<MemberAvailabilityCreateDto, Availability>();
+                cfg.CreateMap<MemberAvailabilityUpdateDto, Availability>();
             });
         }
     }
