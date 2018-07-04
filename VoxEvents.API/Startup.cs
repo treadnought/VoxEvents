@@ -78,6 +78,7 @@ namespace VoxEvents.API
                 cfg.CreateMap<Availability, VoxEventAvailabilityDto>();
                 cfg.CreateMap<VoxEvent, VoxEventNoAvailabilitiesDto>();
                 cfg.CreateMap<VoxEvent, VoxEventDto>();
+                cfg.CreateMap<VoxEvent, VoxEventUpdateDto>().ReverseMap();
                 cfg.CreateMap<Venue, VenueNoEventsDto>();
                 cfg.CreateMap<Venue, VenueUpdateDto>().ReverseMap();
                 cfg.CreateMap<Venue, VenueDto>();

@@ -139,7 +139,6 @@ namespace VoxEvents.API.Controllers
                 }
 
                 return NoContent();
-
             }
             catch (Exception ex)
             {

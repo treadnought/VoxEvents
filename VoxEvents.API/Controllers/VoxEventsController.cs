@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -100,6 +101,49 @@ namespace VoxEvents.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogCritical($"Exception creating Vox event", ex);
+                return StatusCode(500, "A problem occurred handling your request");
+            }
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult UpdateVoxEvent(int id, [FromBody] JsonPatchDocument<VoxEventUpdateDto> patchDocument)
+        {
+            try
+            {
+                if (patchDocument == null)
+                {
+                    return BadRequest();
+                }
+
+                var voxEventEntity = _repository.GetVoxEvent(id);
+                if (voxEventEntity == null)
+                {
+                    return NotFound();
+                }
+
+                var voxEventToPatch = Mapper.Map<VoxEventUpdateDto>(voxEventEntity);
+
+                patchDocument.ApplyTo(voxEventToPatch, ModelState);
+
+                TryValidateModel(voxEventToPatch);
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                Mapper.Map(voxEventToPatch, voxEventEntity);
+
+                if (!_repository.Save())
+                {
+                    return StatusCode(500, "A problem occurred handling your request");
+                }
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception patching Vox event", ex);
                 return StatusCode(500, "A problem occurred handling your request");
             }
         }

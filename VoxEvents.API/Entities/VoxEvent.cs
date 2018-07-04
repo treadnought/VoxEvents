@@ -26,6 +26,9 @@ namespace VoxEvents.API.Entities
 
         public ICollection<Availability> Availabilities { get; set; } 
             = new List<Availability>();
+
+        [Required]
+        [Range(0, int.MaxValue)]
         public int VenueId { get; set; }
         public Venue Venue { get; set; }
     }
