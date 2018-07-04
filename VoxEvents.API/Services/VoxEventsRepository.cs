@@ -80,7 +80,7 @@ namespace VoxEvents.API.Services
             return _context.Availabilities.Where(a => a.VoxEventId == voxEventId);
         }
 
-        public Venue GetVenue(int venueId, bool includeEvents)
+        public Venue GetVenue(int venueId, bool includeEvents = false)
         {
             if (includeEvents)
             {

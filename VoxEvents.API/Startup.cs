@@ -70,17 +70,18 @@ namespace VoxEvents.API
                 cfg.CreateMap<Member, MemberNoAvailabilitiesDto>();
                 cfg.CreateMap<Member, MemberDto>();
                 cfg.CreateMap<MemberCreateDto, Member>();
+                cfg.CreateMap<Member, MemberUpdateDto>().ReverseMap();
                 cfg.CreateMap<VoxEventCreateDto, VoxEvent>();
                 cfg.CreateMap<VenueCreateDto, Venue>();
                 cfg.CreateMap<Availability, MemberAvailabilityDto>();
-                cfg.CreateMap<Availability, MemberAvailabilityUpdateDto>();
+                cfg.CreateMap<Availability, MemberAvailabilityUpdateDto>().ReverseMap();
                 cfg.CreateMap<Availability, VoxEventAvailabilityDto>();
                 cfg.CreateMap<VoxEvent, VoxEventNoAvailabilitiesDto>();
                 cfg.CreateMap<VoxEvent, VoxEventDto>();
                 cfg.CreateMap<Venue, VenueNoEventsDto>();
+                cfg.CreateMap<Venue, VenueUpdateDto>().ReverseMap();
                 cfg.CreateMap<Venue, VenueDto>();
                 cfg.CreateMap<MemberAvailabilityCreateDto, Availability>();
-                cfg.CreateMap<MemberAvailabilityUpdateDto, Availability>();
             });
         }
     }

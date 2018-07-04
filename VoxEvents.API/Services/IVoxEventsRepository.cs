@@ -9,13 +9,13 @@ namespace VoxEvents.API.Services
     public interface IVoxEventsRepository
     {
         IEnumerable<Venue> GetVenues();
-        Venue GetVenue(int venueId, bool includeEvents);
+        Venue GetVenue(int venueId, bool includeEvents = false);
         IEnumerable<VoxEvent> GetVoxEvents();
-        VoxEvent GetVoxEvent(int voxEventId, bool includeAvailabilities);
+        VoxEvent GetVoxEvent(int voxEventId, bool includeAvailabilities = false);
         IEnumerable<Availability> GetVoxEventAllAvailabilities(int voxEventId);
         IEnumerable<Member> GetMembers();
         IEnumerable<Availability> GetMemberAllAvailabilities(int memberId);
-        Member GetMember(int memberId, bool includeAvailabilities);
+        Member GetMember(int memberId, bool includeAvailabilities = false);
         Availability GetMemberAvailability(int memberId, int voxEventId);
         bool MemberExists(int memberId);
         bool VoxEventExists(int voxEventId);

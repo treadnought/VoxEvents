@@ -78,29 +78,38 @@ namespace VoxEvents.API.Controllers
         [HttpPost]
         public IActionResult CreateMember([FromBody] MemberCreateDto member)
         {
-            if (member == null)
+            try
             {
-                return BadRequest();
+                if (member == null)
+                {
+                    return BadRequest();
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var memberToAdd = Mapper.Map<Entities.Member>(member);
+
+                _repository.AddMember(memberToAdd);
+
+                if (!_repository.Save())
+                {
+                    return StatusCode(500, "A problem occurred handling your request");
+                }
+
+                var newMember = Mapper.Map<MemberDto>(memberToAdd);
+
+                return CreatedAtRoute("GetMember", new
+                { id = newMember.Id }, newMember);
+
             }
-
-            if (!ModelState.IsValid)
+            catch (Exception ex)
             {
-                return BadRequest(ModelState);
-            }
-
-            var memberToAdd = Mapper.Map<Entities.Member>(member);
-
-            _repository.AddMember(memberToAdd);
-
-            if (!_repository.Save())
-            {
+                _logger.LogCritical($"Exception adding member", ex);
                 return StatusCode(500, "A problem occurred handling your request");
             }
-
-            var newMember = Mapper.Map<MemberDto>(memberToAdd);
-
-            return CreatedAtRoute("GetMember", new
-            { id = newMember.Id }, newMember);
         }
 
         [HttpPut("{id}")]
@@ -140,21 +149,13 @@ namespace VoxEvents.API.Controllers
                 return BadRequest();
             }
 
-            var memberFromStore = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
-
-            if (memberFromStore == null)
+            var memberEntity = _repository.GetMember(id);
+            if (memberEntity == null)
             {
                 return NotFound();
             }
 
-            var memberToPatch = new MemberUpdateDto()
-            {
-                FirstName = memberFromStore.FirstName,
-                LastName = memberFromStore.LastName,
-                Email = memberFromStore.Email,
-                Phone = memberFromStore.Phone,
-                Part = memberFromStore.Part
-            };
+            var memberToPatch = Mapper.Map<MemberUpdateDto>(memberEntity);
 
             patchDocument.ApplyTo(memberToPatch, ModelState);
 
@@ -165,11 +166,12 @@ namespace VoxEvents.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            memberFromStore.FirstName = memberToPatch.FirstName;
-            memberFromStore.LastName = memberToPatch.LastName;
-            memberFromStore.Email = memberToPatch.Email;
-            memberFromStore.Phone = memberToPatch.Phone;
-            memberFromStore.Part = memberToPatch.Part;
+            Mapper.Map(memberToPatch, memberEntity);
+
+            if (!_repository.Save())
+            {
+                return StatusCode(500, "A problem occurred handling your request");
+            }
 
             return NoContent();
         }

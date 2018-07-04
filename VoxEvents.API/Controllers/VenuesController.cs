@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -68,6 +69,7 @@ namespace VoxEvents.API.Controllers
             }
         }
 
+        [HttpPost]
         public IActionResult CreateVenue([FromBody] VenueCreateDto venue)
         {
             try
@@ -98,6 +100,50 @@ namespace VoxEvents.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogCritical($"Exception adding venue", ex);
+                return StatusCode(500, "A problem occurred handling your request");
+            }
+        }
+
+        [HttpPatch("{venueId}")]
+        public IActionResult UpdateVenue(int venueId,[FromBody] JsonPatchDocument<VenueUpdateDto> patchDocument)
+        {
+            try
+            {
+                if (patchDocument == null)
+                {
+                    return BadRequest();
+                }
+
+                var venueEntity = _repository.GetVenue(venueId);
+                if (venueEntity == null)
+                {
+                    return NotFound();
+                }
+
+                var venueToPatch = Mapper.Map<VenueUpdateDto>(venueEntity);
+
+                patchDocument.ApplyTo(venueToPatch, ModelState);
+
+                TryValidateModel(venueToPatch);
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                Mapper.Map(venueToPatch, venueEntity);
+
+                if (!_repository.Save())
+                {
+                    return StatusCode(500, "A problem occurred handling your request");
+                }
+
+                return NoContent();
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception patching venue id {venueId}", ex);
                 return StatusCode(500, "A problem occurred handling your request");
             }
         }
