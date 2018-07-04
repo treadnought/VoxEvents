@@ -127,5 +127,20 @@ namespace VoxEvents.API.Services
         {
             _context.Availabilities.Remove(availability);
         }
+
+        public void DeleteMember(Member member)
+        {
+            _context.Members.Remove(member);
+        }
+
+        public void DeleteVoxEvent(VoxEvent voxEvent)
+        {
+            _context.VoxEvents.Remove(voxEvent);
+        }
+
+        public void DeleteVenue(Venue venue)
+        {
+            _context.Venues.Remove(venue);
+        }
     }
 }

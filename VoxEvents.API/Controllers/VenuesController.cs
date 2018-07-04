@@ -17,11 +17,15 @@ namespace VoxEvents.API.Controllers
     {
         private readonly ILogger<VenuesController> _logger;
         private readonly IVoxEventsRepository _repository;
+        private readonly IMailService _mailService;
 
-        public VenuesController(ILogger<VenuesController> logger, IVoxEventsRepository repository)
+        public VenuesController(ILogger<VenuesController> logger, 
+            IVoxEventsRepository repository,
+            IMailService mailService)
         {
             _logger = logger;
             _repository = repository;
+            _mailService = mailService;
         }
 
         [HttpGet]
@@ -143,6 +147,35 @@ namespace VoxEvents.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogCritical($"Exception patching venue id {venueId}", ex);
+                return StatusCode(500, "A problem occurred handling your request");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteVenue(int id)
+        {
+            try
+            {
+                var venueEntity = _repository.GetVenue(id);
+                if (venueEntity == null)
+                {
+                    return NotFound();
+                }
+
+                _repository.DeleteVenue(venueEntity);
+
+                if (!_repository.Save())
+                {
+                    return StatusCode(500, "A problem occurred handling your request");
+                }
+
+                _mailService.Send("Venue Deleted", $"Venue {venueEntity.VenueName} with id {id} was deleted.");
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception deleting venue", ex);
                 return StatusCode(500, "A problem occurred handling your request");
             }
         }

@@ -25,6 +25,9 @@ namespace VoxEvents.API.Services
         void AddVoxEvent(VoxEvent voxEvent);
         void AddVenue(Venue venue);
         void DeleteAvailability(Availability availability);
+        void DeleteMember(Member member);
+        void DeleteVoxEvent(VoxEvent voxEvent);
+        void DeleteVenue(Venue venue);
         bool Save();
     }
 }

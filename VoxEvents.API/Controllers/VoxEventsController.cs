@@ -17,11 +17,15 @@ namespace VoxEvents.API.Controllers
     {
         private readonly IVoxEventsRepository _repository;
         private readonly ILogger<VoxEventsController> _logger;
+        private readonly IMailService _mailService;
 
-        public VoxEventsController(IVoxEventsRepository repository, ILogger<VoxEventsController> logger)
+        public VoxEventsController(IVoxEventsRepository repository, 
+            ILogger<VoxEventsController> logger,
+            IMailService mailService)
         {
             _repository = repository;
             _logger = logger;
+            _mailService = mailService;
         }
 
         [HttpGet]
@@ -144,6 +148,35 @@ namespace VoxEvents.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogCritical($"Exception patching Vox event", ex);
+                return StatusCode(500, "A problem occurred handling your request");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteVoxEvent(int id)
+        {
+            try
+            {
+                var voxEventEntity = _repository.GetVoxEvent(id);
+                if (voxEventEntity == null)
+                {
+                    return NotFound();
+                }
+
+                _repository.DeleteVoxEvent(voxEventEntity);
+
+                if (!_repository.Save())
+                {
+                    return StatusCode(500, "A problem occurred handling your request");
+                }
+
+                _mailService.Send("VoxEvent Deleted", $"VoxEvent {voxEventEntity.EventName} with id {id} was deleted.");
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception deleting voxEvent", ex);
                 return StatusCode(500, "A problem occurred handling your request");
             }
         }

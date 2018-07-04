@@ -144,53 +144,73 @@ namespace VoxEvents.API.Controllers
         [HttpPatch("{id}")]
         public IActionResult PatchMember(int id, [FromBody] JsonPatchDocument<MemberUpdateDto> patchDocument)
         {
-            if (patchDocument == null)
+            try
             {
-                return BadRequest();
+                if (patchDocument == null)
+                {
+                    return BadRequest();
+                }
+
+                var memberEntity = _repository.GetMember(id);
+                if (memberEntity == null)
+                {
+                    return NotFound();
+                }
+
+                var memberToPatch = Mapper.Map<MemberUpdateDto>(memberEntity);
+
+                patchDocument.ApplyTo(memberToPatch, ModelState);
+
+                TryValidateModel(memberToPatch);
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                Mapper.Map(memberToPatch, memberEntity);
+
+                if (!_repository.Save())
+                {
+                    return StatusCode(500, "A problem occurred handling your request");
+                }
+
+                return NoContent();
             }
-
-            var memberEntity = _repository.GetMember(id);
-            if (memberEntity == null)
+            catch (Exception ex)
             {
-                return NotFound();
-            }
-
-            var memberToPatch = Mapper.Map<MemberUpdateDto>(memberEntity);
-
-            patchDocument.ApplyTo(memberToPatch, ModelState);
-
-            TryValidateModel(memberToPatch);
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            Mapper.Map(memberToPatch, memberEntity);
-
-            if (!_repository.Save())
-            {
+                _logger.LogCritical($"Exception patching member with id {id}", ex);
                 return StatusCode(500, "A problem occurred handling your request");
             }
-
-            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteMember(int id)
         {
-            var memberFromStore = VoxEventsDataStore.Current.Members.FirstOrDefault(m => m.Id == id);
-
-            if (memberFromStore == null)
+            try
             {
-                return NotFound();
+                var memberEntity = _repository.GetMember(id);
+                if (memberEntity == null)
+                {
+                    return NotFound();
+                }
+
+                _repository.DeleteMember(memberEntity);
+
+                if (!_repository.Save())
+                {
+                    return StatusCode(500, "A problem occurred handling your request");
+                }
+
+                _mailService.Send("Member Deleted", $"Member {memberEntity.FirstName} {memberEntity.LastName} with id {id} deleted.");
+
+                return NoContent();
             }
-
-            VoxEventsDataStore.Current.Members.Remove(memberFromStore);
-
-            _mailService.Send("Member Deleted", $"Member {memberFromStore.FirstName} {memberFromStore.LastName} with id {id} deleted.");
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception deleting member", ex);
+                return StatusCode(500, "A problem occurred handling your request");
+            }
         }
     }
 }
