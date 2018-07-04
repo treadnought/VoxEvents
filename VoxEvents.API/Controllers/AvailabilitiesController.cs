@@ -245,5 +245,31 @@ namespace VoxEvents.API.Controllers
                 return StatusCode(500, "A problem occurred handling your request");
             }
         }
+
+        [HttpDelete("members/{memberId}/availabilities/{voxEventId}")]
+        public IActionResult DeleteAvailability(int memberId, int voxEventId)
+        {
+            try
+            {
+                var memberAvailabilityEntity = _repository.GetMemberAvailability(memberId, voxEventId);
+                if (memberAvailabilityEntity == null)
+                {
+                    return NotFound();
+                }
+
+                _repository.DeleteAvailability(memberAvailabilityEntity);
+
+                if (!_repository.Save())
+                {
+                    return StatusCode(500, "A problem occurred handling your request");
+                }
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception deleting member id {memberId}'s availability for event id {voxEventId}", ex);
+                return StatusCode(500, "A problem occurred handling your request");
+            }
+        }
     }
 }

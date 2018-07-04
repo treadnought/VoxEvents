@@ -13,5 +13,6 @@ namespace VoxEvents.API.Models
         public DateTime EventDate { get; set; }
         public DateTime RehearsalTime { get; set; }
         public DateTime PerformanceTime { get; set; }
+        public int VenueId { get; set; }
     }
 }

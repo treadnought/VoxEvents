@@ -122,5 +122,10 @@ namespace VoxEvents.API.Services
         {
             _context.Venues.Add(venue);
         }
+
+        public void DeleteAvailability(Availability availability)
+        {
+            _context.Availabilities.Remove(availability);
+        }
     }
 }
