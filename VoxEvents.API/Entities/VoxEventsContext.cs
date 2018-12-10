@@ -12,7 +12,7 @@ namespace VoxEvents.API.Entities
         public VoxEventsContext(DbContextOptions<VoxEventsContext> options)
             : base(options)
         {
-            Database.Migrate();
+            //Database.Migrate();
         }
 
         public DbSet<VoxEvent> VoxEvents { get; set; }
