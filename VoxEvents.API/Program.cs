@@ -31,7 +31,7 @@ namespace VoxEvents.API
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseApplicationInsights()
+                //.UseApplicationInsights()
                 .UseStartup<Startup>()
                 .Build();
     }
